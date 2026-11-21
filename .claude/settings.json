@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(node --test:*)",
+      "Bash(adb devices:*)",
+      "Bash(adb version:*)"
+    ],
+    "deny": [
+      "Bash(fastboot:*)",
+      "Bash(adb root:*)",
+      "Bash(adb remount:*)",
+      "Bash(adb reboot bootloader:*)",
+      "Bash(adb reboot recovery:*)",
+      "Bash(adb sideload:*)",
+      "Bash(adb shell su:*)",
+      "Bash(adb shell rm:*)",
+      "Bash(adb shell pm uninstall:*)",
+      "Bash(adb shell pm clear:*)",
+      "Bash(adb shell settings put:*)",
+      "Bash(adb shell setprop:*)"
+    ],
+    "ask": [
+      "Bash(adb shell pm disable-user:*)",
+      "Bash(adb shell pm enable:*)",
+      "Bash(adb install:*)",
+      "Bash(adb push:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/adb-guard.mjs\""
+          }
+        ]
+      }
+    ]
+  }
+}
