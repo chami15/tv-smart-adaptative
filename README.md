@@ -3,9 +3,9 @@
 Monte a sua TV no computador e envie para ela. Layout da tela inicial, apps favoritos e limpeza de
 memória — **sem root e sempre reversível**.
 
-> Status: **Fase 0 — Fundação** (planejamento). Ainda não há código que fale com a TV.
+> Status: Fase 0 concluída · **Fase 1 — Descoberta** planejada. Ainda não há código que fale com a TV.
 
-- Alvo: TVs TCL com Android TV / Google TV (TCL com Roku não é compatível).
+- Alvo: **qualquer TV** — começa por Android TV / Google TV de qualquer marca; webOS/Tizen depois (Roku não permite).
 - Como funciona: um **Studio** no PC conversa com a TV pela rede local via ADB e instala um **Launcher**
   leve, configurado por um perfil JSON.
 

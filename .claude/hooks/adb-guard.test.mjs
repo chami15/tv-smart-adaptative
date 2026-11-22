@@ -47,7 +47,21 @@ const blocked = [
   'adb -s 192.168.0.20:5555 shell < script.sh',
   'echo ok && adb shell rm /sdcard/x',
   'adb.exe shell rm /sdcard/x',
+  // Windows
+  'C:\\platform-tools\\adb.exe shell rm /sdcard/x',
+  '& "C:\\Program Files\\platform-tools\\adb.exe" reboot bootloader',
+  'C:\\platform-tools\\fastboot.exe devices',
+  'cmd /c adb shell pm uninstall --user 0 com.android.tv.settings',
 ];
+
+const allowedWindows = [
+  'C:\\platform-tools\\adb.exe devices -l',
+  '& "C:\\Program Files\\platform-tools\\adb.exe" shell getprop ro.product.brand',
+  'npm run dev; adb devices',
+];
+for (const cmd of allowedWindows) {
+  test(`permite (Windows): ${cmd}`, () => assert.equal(checkCommand(cmd).blocked, false));
+}
 
 for (const cmd of allowed) {
   test(`permite: ${cmd}`, () => assert.equal(checkCommand(cmd).blocked, false));

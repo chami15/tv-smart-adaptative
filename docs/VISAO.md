@@ -2,7 +2,7 @@
 
 ## O problema
 
-TVs smart TCL (Android TV / Google TV), principalmente as de entrada com 1,5–2 GB de RAM, ficam lentas:
+TVs smart (de qualquer marca), principalmente as de entrada com 1,5–2 GB de RAM, ficam lentas:
 a tela inicial padrão é pesada, cheia de anúncios e recomendações, e vem com dezenas de apps
 pré-instalados rodando em segundo plano. Personalizar isso hoje exige linha de comando, listas de pacotes
 copiadas da internet e coragem — e um erro pode deixar a TV sem entrada HDMI ou sem controle remoto.
@@ -11,6 +11,10 @@ copiadas da internet e coragem — e um erro pode deixar a TV sem entrada HDMI o
 
 **Montar a TV no computador, com calma, e só depois enviar para ela.** Como um editor de site:
 você vê a prévia, ajusta, e publica.
+
+**Adaptativa:** funciona com a TV que você tiver. O Studio descobre marca, modelo, sistema, memória e
+resolução e mostra só o que aquela TV consegue fazer. O mesmo perfil pode ser levado para outra TV — o
+Studio adapta o que for possível e avisa o que não for.
 
 ## Experiência do usuário (fluxo ideal)
 
@@ -40,7 +44,7 @@ você vê a prévia, ajusta, e publica.
 
 ## Fora do escopo (por enquanto)
 
-- TVs TCL com Roku, webOS, Tizen ou Linux proprietário.
+- Nas primeiras versões: webOS, Tizen e Fire TV (planejados para depois). Roku: não permite.
 - Root, ROMs customizadas, overclock, alterações de firmware.
 - Bloquear anúncios dentro de apps de streaming.
 - Controle remoto pelo celular (pode virar fase futura).

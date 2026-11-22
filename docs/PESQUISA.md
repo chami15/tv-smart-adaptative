@@ -47,6 +47,22 @@ intacto. Será investigado no aparelho real na Fase 4.
   pareamento por código ("Depuração sem fio").
   [ADB Wi-Fi 2.0](https://developer.android.com/blog/posts/introducing-fast-and-reliable-wireless-debugging-with-android-debug-bridge-adb-wi-fi-2-0)
 
-## Questão em aberto: qual TCL?
-TCL vende no Brasil modelos com **Google TV/Android TV** e também com **Roku TV**. Roku não tem ADB nem
-permite trocar a tela inicial — o projeto, como desenhado, só funciona em Android/Google TV.
+## Outras plataformas (para a adaptatividade)
+- **LG webOS:** app "Developer Mode" oficial permite instalar apps; a sessão expira após ~50 h sem renovar.
+  Trocar o Home de verdade só com root (proibido aqui). Projeto que personaliza o home do webOS 10 sem
+  mudança permanente: [webos10-homescreen-customization](https://github.com/mareklarek/webos10-homescreen-customization).
+- **Samsung Tizen:** modo desenvolvedor permite instalar apps; redirecionar o Home exige alterar uma chave
+  de configuração do sistema (relato de blog, não oficial) e TVs 2024+ exigem certificado Samsung.
+  [LLM Gateway](https://llmgateway.io/blog/hack-samsung-tv-home-screen-with-ai)
+- **Roku:** não permite tela inicial de terceiros. [Bitdoze](https://www.bitdoze.com/smart-tv-custom-home-screen-remove-ads/)
+- Já existe um home multiplataforma (Google TV, webOS 3+, Tizen 2.4+) chamado free-my-tv, citado em
+  [Bitdoze](https://www.bitdoze.com/smart-tv-custom-home-screen-remove-ads/) — referência de que um perfil
+  neutro + launchers por plataforma é viável.
+- Alerta de imprensa sobre "debloat com IA" feito sem cuidado:
+  [PCWorld](https://www.pcworld.com/article/3266473/please-dont-use-ai-hacks-to-debloat-your-tv.html) —
+  reforça nossas regras de snapshot, allowlist e intocáveis.
+
+## Decisões tomadas com o usuário (Fase 0)
+- Adaptativa a **qualquer** TV; sem foco em modelo. Começar por Android TV/Google TV de qualquer marca.
+- PC **Windows**; Studio como **página local no navegador**.
+- Desativar o launcher original é **aceito** (usuário não usa busca por voz), sempre reversível.
