@@ -14,8 +14,8 @@
     "studio/web"
   ],
   "scripts": {
-    "start": "npm run build:web && node studio/server/src/main.ts",
-    "dev:fake": "npm run build:web && node studio/server/src/main.ts --fake",
+    "start": "node scripts/preflight.mjs && npm run build:web && node studio/server/src/main.ts",
+    "dev:fake": "node scripts/preflight.mjs && npm run build:web && node studio/server/src/main.ts --fake",
     "build:web": "npm run build -w studio/web",
     "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck -w studio/web",
     "test": "vitest run",

@@ -49,3 +49,10 @@ privada do próprio usuário.
   agora coberto por teste e2e).
 - A busca real não pôde ser testada aqui (o ambiente de desenvolvimento não tem rede doméstica);
   **falta o usuário confirmar na rede de casa** que a TV dele aparece na lista.
+- **Bugs relatados pelo usuário ao atualizar** (todos com teste de regressão em `scripts/tests/` e
+  `studio/server/tests/regression-bug-20261126-versao.test.ts`):
+  1. `git pull` abortava porque o `npm install` no Windows reescrevia o `package-lock.json` → instalações
+     agora usam `npm ci` e foi criado o `Atualizar-Studio.cmd`.
+  2. Dependência nova não era instalada ao reabrir (o .cmd só instalava na primeira vez) → `scripts/preflight.mjs`
+     confere e instala sozinho antes de abrir.
+  3. Studio aberto durante a atualização continuava com a tela antiga sem avisar → aviso na tela + versão no rodapé.

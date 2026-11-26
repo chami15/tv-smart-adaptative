@@ -13,6 +13,7 @@ export interface StudioStatus {
   devices: AdbDeviceEntry[];
   dataDir: string;
   fakeNetwork?: { host: string; scenario: string }[];
+  version?: { running: string; onDisk: string; updateAvailable: boolean };
 }
 
 export interface CapabilityStatus {

@@ -1,5 +1,9 @@
 // Orquestra o core para a API: encontra o adb, conecta, lê inventário e salva snapshots.
 import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { readCodeVersion } from './version.ts';
+
+const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 import {
   AdbError,
   AdbExecutor,
@@ -23,6 +27,8 @@ export interface StudioServiceOptions {
   fakeNetwork?: readonly { host: string; scenario: string }[];
   /** Busca de TVs na rede; o padrão é a busca real. */
   discover?: () => Promise<DiscoveryResult>;
+  /** Versão do código no disco (padrão: commit do git). Lida de novo a cada status. */
+  getVersion?: () => string;
 }
 
 export interface StudioStatus {
@@ -31,6 +37,8 @@ export interface StudioStatus {
   devices: AdbDeviceEntry[];
   dataDir: string;
   fakeNetwork?: readonly { host: string; scenario: string }[];
+  /** updateAvailable: o código foi atualizado (ex.: git pull) depois que o Studio abriu. */
+  version: { running: string; onDisk: string; updateAvailable: boolean };
 }
 
 export class StudioService {
@@ -40,9 +48,13 @@ export class StudioService {
   private version: string | null = null;
   private readonly inflight = new Map<string, Promise<unknown>>();
   private readonly lastInventory = new Map<string, DeviceInventory>();
+  private readonly getVersion: () => string;
+  private readonly runningVersion: string;
 
   constructor(options: StudioServiceOptions) {
     this.options = options;
+    this.getVersion = options.getVersion ?? (() => readCodeVersion(REPO_ROOT));
+    this.runningVersion = this.getVersion();
     this.setup();
   }
 
@@ -94,8 +106,19 @@ export class StudioService {
       adb: { found: this.executor !== null, path: this.adbPath, version: this.version },
       devices,
       dataDir: this.options.dataDir,
+      version: this.versionInfo(),
       ...(this.options.fakeNetwork ? { fakeNetwork: this.options.fakeNetwork } : {}),
     };
+  }
+
+  private versionInfo(): StudioStatus['version'] {
+    let onDisk = this.runningVersion;
+    try {
+      onDisk = this.getVersion();
+    } catch {
+      /* sem como ler: assume igual */
+    }
+    return { running: this.runningVersion, onDisk, updateAvailable: onDisk !== this.runningVersion };
   }
 
   connect(host: string, port: number): Promise<{ serial: string; already: boolean }> {

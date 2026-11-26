@@ -100,6 +100,12 @@ export function App() {
   return (
     <Shell status={status}>
       {fatal && <Notice tone="error" title="Problema com o Studio">{fatal}</Notice>}
+      {status?.version?.updateAvailable && (
+        <Notice tone="warn" title="Existe uma versão nova do Studio">
+          O projeto foi atualizado enquanto o Studio estava aberto. Feche a janela preta do Studio e abra o{' '}
+          <b>Iniciar-Studio</b> de novo para usar a versão nova.
+        </Notice>
+      )}
       {status && !status.adb.found && <AdbMissing onRecheck={async () => { await call('POST', '/api/adb/recheck', {}); await refreshStatus(); }} />}
       {status?.adb.found && view.kind === 'connect' && (
         <ConnectWizard status={status} message={view.message} onConnected={onConnected} onOpen={loadInventory} />
@@ -152,7 +158,9 @@ function Shell({ status, children }: { status?: StudioStatus | null; children: R
         )}
       </header>
       <main>{children}</main>
-      <footer className="muted small">Fase 1 · somente leitura — nada é alterado na sua TV.</footer>
+      <footer className="muted small">
+        Somente leitura — nada é alterado na sua TV.{status?.version ? ` · versão ${status.version.running}` : ''}
+      </footer>
     </div>
   );
 }

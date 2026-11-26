@@ -15,6 +15,18 @@ Dê dois cliques em **`Iniciar-Studio.cmd`** na pasta do projeto.
 
 > Quer só conhecer sem TV? No terminal, na pasta do projeto: `npm run dev:fake` (TVs simuladas).
 
+## Atualizar para a versão mais nova
+1. Feche a janela preta do Studio.
+2. Dê dois cliques em **`Atualizar-Studio.cmd`** (ele baixa a versão nova e instala o que precisar).
+3. Abra o **`Iniciar-Studio.cmd`**.
+
+O rodapé do Studio mostra a versão em uso. Se o projeto for atualizado com o Studio aberto, aparece um aviso
+pedindo para reabrir.
+
+> Viu o erro *"Your local changes to the following files would be overwritten by merge: package-lock.json"*?
+> É uma mudança automática do npm, não sua. Rode `git checkout -- package-lock.json` e depois `git pull`
+> (o `Atualizar-Studio.cmd` já faz isso sozinho).
+
 ## 3. Preparar a TV (uma vez só)
 O próprio Studio mostra o passo a passo. Resumo:
 1. Configurações → Sistema → Sobre → clique 7 vezes em **Build** ("Você agora é um desenvolvedor").
