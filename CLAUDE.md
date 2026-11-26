@@ -104,5 +104,18 @@ Na dúvida sobre uma decisão de produto ou algo que afete a TV: **pergunte ao u
 
 ## Comandos
 
-- Testes do hook de segurança: `node --test .claude/hooks/adb-guard.test.mjs`
-- (Demais comandos serão adicionados conforme as fases forem implementadas.)
+Requer Node 22.18+ (TypeScript roda direto, sem build, em core/server).
+
+| Comando | O que faz |
+|---|---|
+| `npm start` | Studio com TV real (procura o `adb`) |
+| `npm run dev:fake` | Studio com a rede de TVs simuladas (IPs 192.168.0.50–64) |
+| `npm test` | Testes unitários/integração (Vitest) |
+| `npm run test:e2e` | Testes como usuário no navegador (Playwright, TV simulada) |
+| `npm run test:hooks` | Testes do hook de segurança |
+| `npm run typecheck` | Checagem de tipos (core, server, web) |
+| `npm run test:all` | Tudo acima |
+| `npm run export:fixture -- "<backup>"` | Vira um backup real em TV simulada anônima |
+
+Testes de regressão de bugs: `studio/core/tests/regression/`, `studio/server/tests/regression-*.test.ts`
+e cenários marcados em `studio/web/e2e/`.

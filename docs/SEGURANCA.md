@@ -16,8 +16,10 @@ Estas regras valem para o código do Studio, do Launcher **e** para o Claude ao 
 
 ## 2. O que é permitido (allowlist inicial)
 Somente leitura:
-- `getprop`, `pm list packages [-s|-3|-d|-e]`, `dumpsys meminfo`, `dumpsys package <pkg>`,
-  `cat /proc/meminfo`, `wm size`, `cmd package resolve-activity` (consultar home atual)
+- `getprop [chave]`, `pm list packages [-s|-3|-d|-e|-f|-U]`, `pm list features`, `dumpsys meminfo`,
+  `cat /proc/meminfo`, `wm size`, `wm density`, `cmd package resolve-activity` (home atual), `get-state`
+- Conexão: `version`, `devices -l`, `connect`, `disconnect`, `pair`
+- Implementado em `studio/core/src/adb/allowlist.ts` (Fase 1: **somente** esta lista de leitura)
 
 Escrita (sempre com snapshot + dry-run + confirmação):
 - `pm disable-user --user 0 <pkg>` / `pm enable <pkg>` — somente pacotes fora da lista 🔴

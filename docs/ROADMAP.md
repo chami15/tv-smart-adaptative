@@ -5,7 +5,7 @@ Status: ⬜ não iniciada · 📝 planejada (aguardando aprovação) · 🟨 em 
 | Fase | Nome | Objetivo | Toca na TV? | Status |
 |---|---|---|---|---|
 | 0 | Fundação | Visão, arquitetura, regras de segurança, guia de trabalho, decisões | Não | ✅ |
-| 1 | Descoberta adaptativa | Base do Studio (página local) + driver Android com ADB **somente leitura**: detectar qualquer TV, capacidades, inventário e snapshot | Só leitura | 📝 |
+| 1 | Descoberta adaptativa | Base do Studio (página local) + driver Android com ADB **somente leitura**: detectar qualquer TV, capacidades, inventário e snapshot | Só leitura | 🟨 (código pronto; falta teste na TV real) |
 | 2 | Núcleo de segurança p/ escrita | Dry-run, plano de mudanças, execução passo a passo, verificação e rollback | Não (simulado) | ⬜ |
 | 3 | Limpeza de memória | Catálogo por camadas 🟢🟡🔴, aplicar/desfazer, medir antes/depois | Sim (reversível) | ⬜ |
 | 4 | Launcher MVP | App de TV leve e adaptativo (resolução/RAM/API) que lê o perfil; assumir o Home | Sim (app comum) | ⬜ |

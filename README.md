@@ -3,7 +3,9 @@
 Monte a sua TV no computador e envie para ela. Layout da tela inicial, apps favoritos e limpeza de
 memória — **sem root e sempre reversível**.
 
-> Status: Fase 0 concluída · **Fase 1 — Descoberta** planejada. Ainda não há código que fale com a TV.
+> Status: **Fase 1 — Descoberta** pronta para teste na TV real. O Studio conecta e **só lê** (nada é alterado na TV).
+
+**Como usar no Windows:** veja o [Guia de uso](docs/GUIA-USO.md) — resumo: instale Node.js 22 e o adb, e dê dois cliques em `Iniciar-Studio.cmd`.
 
 - Alvo: **qualquer TV** — começa por Android TV / Google TV de qualquer marca; webOS/Tizen depois (Roku não permite).
 - Como funciona: um **Studio** no PC conversa com a TV pela rede local via ADB e instala um **Launcher**

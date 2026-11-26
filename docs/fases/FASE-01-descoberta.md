@@ -1,4 +1,4 @@
-# Fase 1 — Descoberta adaptativa (somente leitura) 📝
+# Fase 1 — Descoberta adaptativa (somente leitura) 🟨
 
 **Objetivo:** abrir o Studio no navegador (Windows), conectar a **qualquer** Android TV / Google TV pela
 rede, detectar automaticamente o que ela é e o que suporta, e salvar um inventário + snapshot no PC —
@@ -8,18 +8,18 @@ rede, detectar automaticamente o que ela é e o que suporta, e salvar um invent�
 (apenas a interface de driver fica pronta para elas).
 
 ## Entregáveis
-- [ ] Monorepo (npm workspaces): `studio/core`, `studio/server`, `studio/web`, `shared/`
-- [ ] `core/adb`: executor com **allowlist somente leitura**, validação de argumentos, timeout
-- [ ] `core/drivers`: interface `TvDriver` + `Capabilities`; `AndroidTvDriver` com detecção
-- [ ] `FakeTvDevice` com perfis simulados de várias marcas e cenários de falha
-- [ ] `core/inventory`: aparelho (marca, modelo, Android/API, Google TV ou Android TV, RAM, resolução,
+- [x] Monorepo (npm workspaces): `studio/core`, `studio/server`, `studio/web`, `shared/`
+- [x] `core/adb`: executor com **allowlist somente leitura**, validação de argumentos, timeout
+- [x] `core/drivers`: interface `TvDriver` + `Capabilities`; `AndroidTvDriver` com detecção
+- [x] `FakeTvDevice` com perfis simulados de várias marcas e cenários de falha
+- [x] `core/inventory`: aparelho (marca, modelo, Android/API, Google TV ou Android TV, RAM, resolução,
       launcher atual), pacotes (sistema/usuário, ativo/desativado), memória por processo
-- [ ] `core/snapshot`: salva inventário em `%USERPROFILE%\TVSmartAdaptative\backups\<aparelho>\<data>\`
-- [ ] `studio/server`: 127.0.0.1 + token + Host/Origin
-- [ ] `studio/web`: assistente de conexão, tela "Minha TV" (inventário) — **nenhum botão de escrita**
-- [ ] `npm start` (Studio real) e `npm run dev:fake` (Studio com TV simulada)
-- [ ] CI GitHub Actions: Windows + Ubuntu
-- [ ] Ferramenta de exportar inventário **anonimizado** (para virar fixture de teste, com consentimento)
+- [x] `core/snapshot`: salva inventário em `%USERPROFILE%\TVSmartAdaptative\backups\<aparelho>\<data>\`
+- [x] `studio/server`: 127.0.0.1 + token + Host/Origin
+- [x] `studio/web`: assistente de conexão, tela "Minha TV" (inventário) — **nenhum botão de escrita**
+- [x] `npm start` (Studio real) e `npm run dev:fake` (Studio com TV simulada)
+- [x] CI GitHub Actions: Windows + Ubuntu
+- [x] Ferramenta de exportar inventário **anonimizado** (para virar fixture de teste, com consentimento)
 
 ## Etapas (1 commit cada)
 1. **Esqueleto do monorepo** — `package.json` raiz, TypeScript, Vitest, ESLint/Prettier, `.nvmrc` (Node 22),
@@ -94,3 +94,13 @@ rede, detectar automaticamente o que ela é e o que suporta, e salvar um invent�
 
 **Rollback:** não há o que desfazer na TV nesta fase. Para "desconectar": `adb disconnect` e desligar a
 depuração na TV.
+
+## Registro de execução
+- Etapas 1–11 implementadas, cada uma com commit próprio (4+5 e 8+9 juntas por dependência).
+- Desvios do plano: ESLint ficou de fora (typecheck estrito + Prettier); comando extra na allowlist de leitura:
+  `get-state` e `pm list features` (necessário para detectar TV sem depender de marca).
+- **Bugs encontrados testando como usuário** (todos com teste de regressão):
+  1. Campo de IP aceitava "tv da sala" como nome de host → `studio/web/tests/address.test.ts`.
+  2. Backup de leitura corrompida era salvo como válido → `studio/core/tests/regression/bug-20261126-backup-de-inventario-corrompido.test.ts` (+ API + e2e).
+  3. Exportador quebrava com backups antigos → `studio/core/tests/regression/bug-20261126-export-backup-antigo.test.ts`.
+- Falta: etapa 11 manual — checklist na TV real do usuário (`docs/GUIA-USO.md`).
