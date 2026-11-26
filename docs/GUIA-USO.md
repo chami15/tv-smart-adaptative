@@ -19,8 +19,9 @@ Dê dois cliques em **`Iniciar-Studio.cmd`** na pasta do projeto.
 O próprio Studio mostra o passo a passo. Resumo:
 1. Configurações → Sistema → Sobre → clique 7 vezes em **Build** ("Você agora é um desenvolvedor").
 2. Opções do desenvolvedor → ative **Depuração USB** (às vezes "Depuração de rede").
-3. Anote o **IP da TV** em Configurações → Rede.
-4. No Studio, digite o IP → **Conectar** → na TV, marque "Sempre permitir" e **Permitir**.
+3. Abra o Studio: a TV deve aparecer sozinha em **"TVs encontradas na sua rede"** → **Conectar**.
+   (Se não aparecer, anote o IP em Configurações → Rede e digite no campo de IP.)
+4. Na TV, marque "Sempre permitir deste computador" e escolha **Permitir** (só na primeira vez).
 
 ## 4. Checklist do teste na sua TV real (Fase 1)
 - [ ] O Studio abriu pelo `Iniciar-Studio.cmd`.

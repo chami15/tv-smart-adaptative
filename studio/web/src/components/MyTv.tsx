@@ -98,7 +98,7 @@ export function MyTv({ serial, inventory: inv, onRefresh, onDisconnect }: Props)
       )}
       {snap.error && <Notice tone="error" title="Não foi possível salvar o backup">{snap.error}</Notice>}
 
-      <div className="grid three">
+      <div className="stats">
         <section className="card">
           <h3>Memória</h3>
           <p className="big">{formatMemory(inv.memory.totalKb)}</p>
@@ -129,7 +129,17 @@ export function MyTv({ serial, inventory: inv, onRefresh, onDisconnect }: Props)
             <p className="muted">usando {formatMemory(memByName.get(inv.currentHome.package)!)} de memória</p>
           )}
         </section>
+        <section className="card">
+          <h3>Apps</h3>
+          <p className="big">{counts.all}</p>
+          <p className="muted">
+            {counts.system} do sistema · {counts.user} seus{counts.disabled ? ` · ${counts.disabled} desativados` : ''}
+          </p>
+        </section>
       </div>
+
+      <div className="split">
+      <div className="stack">
 
       <section className="card">
         <h3>O que dá para fazer nesta TV</h3>
@@ -163,6 +173,8 @@ export function MyTv({ serial, inventory: inv, onRefresh, onDisconnect }: Props)
         </section>
       )}
 
+      </div>
+
       <section className="card">
         <h3>Apps instalados</h3>
         <div className="toolbar">
@@ -185,7 +197,7 @@ export function MyTv({ serial, inventory: inv, onRefresh, onDisconnect }: Props)
           <tbody>
             {shown.map((p) => (
               <tr key={p.name}>
-                <td className="mono">{p.name}</td>
+                <td className="mono" title={p.name}>{p.name}</td>
                 <td>{p.system ? 'sistema' : 'usuário'}</td>
                 <td>{p.enabled ? 'ativo' : <span className="pill warn">desativado</span>}</td>
                 <td>{memByName.has(p.name) ? formatMemory(memByName.get(p.name)!) : ''}</td>
@@ -196,6 +208,7 @@ export function MyTv({ serial, inventory: inv, onRefresh, onDisconnect }: Props)
         {shown.length === 0 && <p className="muted">Nenhum app encontrado.</p>}
         <p className="muted small">A classificação 🟢 seguro / 🟡 cuidado / 🔴 intocável chega na Fase 3 (limpeza).</p>
       </section>
+      </div>
     </div>
   );
 }

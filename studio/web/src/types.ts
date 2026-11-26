@@ -53,3 +53,18 @@ export interface SnapshotSummary {
   createdAt: string;
   device: string;
 }
+
+export interface DiscoveredTv {
+  host: string;
+  name: string | null;
+  model: string | null;
+  adbPort: number | null;
+  debuggingEnabled: boolean;
+  sources: string[];
+}
+
+export interface DiscoveryResult {
+  networks: { interfaceName: string; address: string; prefix24: string }[];
+  tvs: DiscoveredTv[];
+  durationMs: number;
+}

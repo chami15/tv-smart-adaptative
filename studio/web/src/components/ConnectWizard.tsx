@@ -3,6 +3,7 @@ import hints from '../../../../shared/catalog/connection-hints.json';
 import { parseAddress } from '../address.ts';
 import { ApiError, call } from '../api.ts';
 import type { StudioStatus } from '../types.ts';
+import { NearbyTvs } from './NearbyTvs.tsx';
 import { Notice } from './Notice.tsx';
 
 interface Props {
@@ -25,13 +26,17 @@ export function ConnectWizard({ status, message, onConnected, onOpen }: Props) {
 
   async function connect(e?: React.FormEvent) {
     e?.preventDefault();
-    if (busy) return;
-    setError(null);
     const parsed = parseAddress(address);
     if ('error' in parsed) return setError(parsed.error);
+    await connectTo(parsed.host, parsed.port ?? 5555);
+  }
+
+  async function connectTo(host: string, port: number) {
+    if (busy) return;
+    setError(null);
     setBusy(true);
     try {
-      const r = await call<{ serial: string }>('POST', '/api/connect', { host: parsed.host, port: parsed.port ?? 5555 });
+      const r = await call<{ serial: string }>('POST', '/api/connect', { host, port });
       onConnected(r.serial);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Falha ao conectar.');
@@ -63,12 +68,14 @@ export function ConnectWizard({ status, message, onConnected, onOpen }: Props) {
   }
 
   return (
+    <div className="stack">
+      {message && <Notice tone="warn" title="Atenção">{message}</Notice>}
+      {info && <Notice tone="ok" title="Tudo certo">{info}</Notice>}
+      <NearbyTvs busy={busy} onConnect={(h, p) => void connectTo(h, p)} />
     <div className="grid">
       <section className="card">
         <h2>Conectar à TV</h2>
-        <p className="muted">Funciona com Android TV e Google TV de qualquer marca. Nada é alterado na TV nesta etapa.</p>
-        {message && <Notice tone="warn" title="Atenção">{message}</Notice>}
-        {info && <Notice tone="ok" title="Tudo certo">{info}</Notice>}
+        <p className="muted">Não achou a sua TV na lista? Digite o IP. Funciona com Android TV e Google TV de qualquer marca.</p>
 
         {ready.length > 0 && (
           <div className="already">
@@ -116,7 +123,7 @@ export function ConnectWizard({ status, message, onConnected, onOpen }: Props) {
         {error && <Notice tone="error" title="Não deu certo">{error}</Notice>}
 
         {status.fakeNetwork && (
-          <details className="fake" open>
+          <details className="fake">
             <summary>Modo simulado — TVs de mentira para testar</summary>
             <ul>
               {status.fakeNetwork.map((f) => (
@@ -129,7 +136,7 @@ export function ConnectWizard({ status, message, onConnected, onOpen }: Props) {
         )}
       </section>
 
-      <section className="card steps">
+      <section className="card steps" id="preparar-tv">
         <h2>Primeira vez? Prepare a TV</h2>
         <Step n={1} title="Ative o modo desenvolvedor" items={hints.generic.developerMode} />
         <Step n={2} title="Ative a depuração" items={hints.generic.debugging} />
@@ -150,6 +157,7 @@ export function ConnectWizard({ status, message, onConnected, onOpen }: Props) {
           Sim. Nesta fase o Studio só <b>lê</b> informações. Você pode desligar a depuração na TV quando quiser.
         </Notice>
       </section>
+    </div>
     </div>
   );
 }

@@ -20,11 +20,11 @@ Android), qualquer escrita na TV, abas laterais/menus complexos.
 - Nada sai da rede local; nada é gravado.
 
 ## Entregáveis
-- [ ] `core/discovery`: redes locais, teste de porta, consulta mDNS, junção dos resultados
-- [ ] Rota `POST /api/discover` (+ versão simulada no `dev:fake`)
-- [ ] Tela: "TVs encontradas na sua rede" no topo da conexão, com 1 clique para conectar; IP manual continua
-- [ ] Refinamentos: largura total da tela, cartões de resumo, apps ao lado das informações em telas largas
-- [ ] Testes unitários, de API e como usuário (Playwright)
+- [x] `core/discovery`: redes locais, teste de porta, consulta mDNS, junção dos resultados
+- [x] Rota `POST /api/discover` (+ versão simulada no `dev:fake`)
+- [x] Tela: "TVs encontradas na sua rede" no topo da conexão, com 1 clique para conectar; IP manual continua
+- [x] Refinamentos: largura total da tela, cartões de resumo, apps ao lado das informações em telas largas
+- [x] Testes unitários, de API e como usuário (Playwright)
 
 ## Etapas
 1. Documentação (este plano) e Fase 1 marcada como concluída.
@@ -42,3 +42,10 @@ privada do próprio usuário.
 - Clicar em "Conectar" numa TV encontrada leva ao mesmo fluxo de autorização da Fase 1.
 - Sem TVs encontradas, a tela explica o que fazer e o IP manual continua disponível.
 - CI verde no Windows e no Linux.
+
+## Registro de execução
+- Etapas 1–5 feitas. No teste como usuário, os cartões das TVs ficavam apertados (selo quebrando em duas
+  linhas e nomes cortados) — reorganizados e conferidos em 1920px, 1280px e celular (sem rolagem lateral,
+  agora coberto por teste e2e).
+- A busca real não pôde ser testada aqui (o ambiente de desenvolvimento não tem rede doméstica);
+  **falta o usuário confirmar na rede de casa** que a TV dele aparece na lista.

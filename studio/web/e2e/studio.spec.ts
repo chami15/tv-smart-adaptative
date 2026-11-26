@@ -140,3 +140,40 @@ test.describe('TVs que ainda não podem ser personalizadas', () => {
     await expect(page.getByRole('button', { name: 'Ler de novo' })).toBeVisible();
   });
 });
+
+test.describe('Fase 1.1 — TVs encontradas na rede', () => {
+  test('lista aparece sozinha e conecta com 1 clique, sem digitar IP', async ({ page }) => {
+    await open(page);
+    const list = page.getByRole('list', { name: 'TVs encontradas' });
+    await expect(list).toBeVisible({ timeout: 10_000 });
+    await expect(list.getByText('TV da Sala')).toBeVisible();
+    await page.getByRole('button', { name: 'Conectar a TV do Quarto' }).click();
+    await expect(page.getByTestId('tv-title')).toHaveText('Philips 43PFG6825', { timeout: 20_000 });
+    await disconnectIfOnTv(page);
+  });
+
+  test('TV com depuração desligada não tem botão de conectar e aponta para o passo a passo', async ({ page }) => {
+    await open(page);
+    const item = page.locator('.tv-item', { hasText: 'TV da Varanda' });
+    await expect(item).toBeVisible({ timeout: 10_000 });
+    await expect(item.getByText('Depuração desligada')).toBeVisible();
+    await expect(item.getByRole('button')).toHaveCount(0);
+    await item.getByRole('link', { name: 'Como ligar' }).click();
+    await expect(page).toHaveURL(/#preparar-tv$/);
+  });
+
+  test('"Procurar de novo" funciona e não some com a lista', async ({ page }) => {
+    await open(page);
+    await expect(page.getByRole('list', { name: 'TVs encontradas' })).toBeVisible({ timeout: 10_000 });
+    await page.getByRole('button', { name: 'Procurar de novo' }).click();
+    await expect(page.getByRole('button', { name: 'Procurar de novo' })).toBeEnabled({ timeout: 10_000 });
+    await expect(page.getByRole('list', { name: 'TVs encontradas' }).getByText('TV da Sala')).toBeVisible();
+  });
+
+  test('tela de celular não tem rolagem para o lado', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await open(page);
+    await expect(page.getByRole('list', { name: 'TVs encontradas' })).toBeVisible({ timeout: 10_000 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+  });
+});
