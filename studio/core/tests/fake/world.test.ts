@@ -70,3 +70,14 @@ it('cada TV da rede simulada tem identidade própria', async () => {
   for (const host of ['192.168.0.50', '192.168.0.51', '192.168.0.60']) ids.add(world.specOf(host)!.props['ro.serialno']!);
   expect(ids.size).toBe(3);
 });
+
+it('TV lembra do PC autorizado ao reconectar (como a TV real)', async () => {
+  const world = createFakeNetwork();
+  const adb = new AdbExecutor(world);
+  await adb.connect('192.168.0.50');
+  await adb.devices();
+  await adb.devices();
+  world.dropConnection('192.168.0.50:5555');
+  await adb.connect('192.168.0.50');
+  expect((await adb.devices())[0]?.state).toBe('device');
+});

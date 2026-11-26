@@ -7,8 +7,8 @@ import { timingSafeEqual } from 'node:crypto';
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
-import { AdbError, SnapshotError, USER_MESSAGES, isValidHost, isValidPairingCode, isValidPort, isValidSerial } from '@tvsa/core';
-import type { StudioService } from './service.ts';
+import { AdbError, SnapshotError, USER_MESSAGES, isValidHost, isValidPackageName, isValidPairingCode, isValidPort, isValidSerial } from '@tvsa/core';
+import { ServiceError, type StudioService } from './service.ts';
 
 export interface HttpOptions {
   service: StudioService;
@@ -111,6 +111,14 @@ function port(body: Record<string, unknown>, fallback?: number): number {
   if (typeof n !== 'number' || !isValidPort(n)) throw new HttpError(400, 'INVALID_ARGUMENT', 'Porta inválida (1 a 65535).');
   return n;
 }
+function pkgList(v: unknown): string[] {
+  if (v === undefined) return [];
+  if (!Array.isArray(v) || v.length > 200 || !v.every((x) => typeof x === 'string' && (x === 'android' || isValidPackageName(x)))) {
+    throw new HttpError(400, 'INVALID_ARGUMENT', 'Lista de apps inválida.');
+  }
+  return v as string[];
+}
+
 function serial(body: Record<string, unknown>): string {
   const s = str(body.serial);
   if (!isValidSerial(s)) throw new HttpError(400, 'INVALID_ARGUMENT', 'TV inválida.');
@@ -125,14 +133,39 @@ async function api(req: http.IncomingMessage, res: http.ServerResponse, url: URL
   switch (route) {
     case 'GET /api/status':
       return sendJson(res, 200, await s.status());
-    case 'GET /api/snapshots':
-      return sendJson(res, 200, await s.snapshots());
+    case 'GET /api/snapshots': {
+      const deviceId = url.searchParams.get('deviceId') ?? undefined;
+      if (deviceId !== undefined && !/^[0-9a-f]{12}$/.test(deviceId)) throw new HttpError(400, 'INVALID_ARGUMENT', 'TV inválida.');
+      return sendJson(res, 200, await s.snapshots(deviceId));
+    }
+    case 'GET /api/pending':
+      return sendJson(res, 200, await s.pending());
   }
 
   if (req.method !== 'POST') throw new HttpError(404, 'NOT_FOUND', 'Rota inexistente.');
   const body = await readJson(req);
 
   switch (url.pathname) {
+    case '/api/cleanup':
+      return sendJson(res, 200, await s.cleanup(serial(body)));
+    case '/api/plan':
+      return sendJson(res, 200, await s.plan(serial(body), { disable: pkgList(body.disable), enable: pkgList(body.enable) }));
+    case '/api/plan/execute': {
+      const planId = str(body.planId);
+      const hash = str(body.hash);
+      if (!/^[0-9a-f-]{36}$/.test(planId) || !/^[0-9a-f]{64}$/.test(hash)) throw new HttpError(400, 'INVALID_ARGUMENT', 'Plano inválido.');
+      return sendJson(res, 200, await s.execute(planId, hash));
+    }
+    case '/api/pending/rollback': {
+      const planId = str(body.planId);
+      if (!/^[0-9a-f-]{36}$/.test(planId)) throw new HttpError(400, 'INVALID_ARGUMENT', 'Plano inválido.');
+      return sendJson(res, 200, await s.rollbackPending(planId, serial(body)));
+    }
+    case '/api/restore/plan': {
+      const dir = str(body.snapshotDir);
+      if (!dir || dir.length > 1024) throw new HttpError(400, 'INVALID_ARGUMENT', 'Backup inválido.');
+      return sendJson(res, 200, await s.restorePlan(serial(body), dir));
+    }
     case '/api/discover':
       return sendJson(res, 200, await s.discover());
     case '/api/adb/recheck':
@@ -206,6 +239,10 @@ const ADB_STATUS: Partial<Record<string, number>> = {
 function sendError(res: http.ServerResponse, err: unknown): void {
   if (res.headersSent) return void res.end();
   if (err instanceof HttpError) return sendJson(res, err.status, { error: { code: err.code, message: err.message } });
+  if (err instanceof ServiceError) return sendJson(res, err.status, { error: { code: err.code, message: err.message } });
+  if (err instanceof SnapshotError && err.code === 'INVALID_SNAPSHOT') {
+    return sendJson(res, 400, { error: { code: err.code, message: err.message } });
+  }
   if (err instanceof SnapshotError) {
     return sendJson(res, 422, {
       error: { code: err.code, message: 'A leitura da TV veio incompleta, então o backup não foi salvo. Clique em "Ler de novo" e tente outra vez.' },

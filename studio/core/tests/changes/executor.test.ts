@@ -69,6 +69,7 @@ describe('executor de planos', () => {
     expect(r.status).toBe('rolled-back');
     expect(r.message).toMatch(/fora do plano/);
     expect(t.state('com.tcl.guard')).toBe(true);
+    expect(t.state('com.tcl.usercenter')).toBe(true); // o efeito colateral também foi desfeito (achado pelo teste de caos)
   });
 
   it('rede cai no meio → "interrompido"; nova mudança é recusada até desfazer; ao voltar, desfaz tudo', async () => {

@@ -14,8 +14,13 @@ const port = portArg ? Number(portArg.split('=')[1]) : 4780;
 const fixedToken = process.env.TVSA_TOKEN && /^[A-Za-z0-9_-]{16,}$/.test(process.env.TVSA_TOKEN) ? process.env.TVSA_TOKEN : undefined;
 
 const baseDir = defaultDataDir();
+// Liberação de mudanças na TV REAL (decisão do usuário). Simulado: sempre liberado.
+const allowRealWrites = process.env.TVSA_ALLOW_REAL_WRITES === '1';
+
 const studio = await startStudio({
   port,
+  allowRealWrites,
+  stepDelayMs: fake ? 250 : 400,
   ...(fixedToken ? { token: fixedToken } : {}),
   dataDir: fake ? path.join(baseDir, 'modo-simulado') : baseDir,
   ...(fake

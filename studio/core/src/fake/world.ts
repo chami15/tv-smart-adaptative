@@ -6,6 +6,7 @@ import * as R from './render.ts';
 import type { FakeBehavior, FakeDeviceSpec } from './types.ts';
 
 interface Session {
+  host: string;
   spec: FakeDeviceSpec;
   authorized: boolean;
   polls: number;
@@ -24,6 +25,8 @@ export class FakeTvWorld implements AdbTransport {
   private readonly hosts = new Map<string, FakeDeviceSpec>();
   private readonly sessions = new Map<string, Session>();
   private readonly paired = new Set<string>();
+  /** TVs que já autorizaram este PC (como a chave do adb guardada na TV real). */
+  private readonly authorizedHosts = new Set<string>();
   /** Escritas aceitas por host (sobrevive a reconexões). */
   private readonly writes = new Map<string, number>();
   private readonly latencyMs: number;
@@ -43,7 +46,10 @@ export class FakeTvWorld implements AdbTransport {
   /** Simula o usuário apertando "Permitir" na TV. */
   acceptOnTv(serial: string): void {
     const s = this.sessions.get(serial);
-    if (s) s.authorized = true;
+    if (s) {
+      s.authorized = true;
+      this.authorizedHosts.add(s.host);
+    }
   }
 
   /** Troca o comportamento de uma TV durante o teste (ex.: injetar falha). */
@@ -102,8 +108,10 @@ export class FakeTvWorld implements AdbTransport {
         const existing = this.sessions.get(serial);
         if (existing && !existing.offline) return ok(`already connected to ${serial}\n`);
         this.sessions.set(serial, {
+          host,
           spec,
-          authorized: this.paired.has(host) || (b.auth ?? 'accept') === 'accept' && (b.acceptAfterPolls ?? 0) === 0,
+          authorized:
+            this.paired.has(host) || this.authorizedHosts.has(host) || ((b.auth ?? 'accept') === 'accept' && (b.acceptAfterPolls ?? 0) === 0),
           polls: 0,
           shellCommands: 0,
           offline: false,
@@ -167,7 +175,10 @@ export class FakeTvWorld implements AdbTransport {
     const b = s.spec.behavior ?? {};
     if ((b.auth ?? 'accept') !== 'accept') return;
     s.polls++;
-    if (s.polls >= (b.acceptAfterPolls ?? 0)) s.authorized = true;
+    if (s.polls >= (b.acceptAfterPolls ?? 0)) {
+      s.authorized = true;
+      this.authorizedHosts.add(serialHost(s));
+    }
   }
 
   private handleDevice(serial: string, args: readonly string[]): AdbRunResult {
@@ -213,4 +224,8 @@ function garble(text: string): string {
   // corta no meio e mistura lixo, como uma conexão instável faria
   const half = text.slice(0, Math.max(1, Math.floor(text.length / 3)));
   return half.replace(/\]/g, '').replace(/:/g, '') + '\n\u0000\u001b[31m???\n%%%%\n';
+}
+
+function serialHost(s: { host: string }): string {
+  return s.host;
 }

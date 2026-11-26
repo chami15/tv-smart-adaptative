@@ -111,11 +111,15 @@ export async function executePlan(plan: ChangePlan, deps: ExecuteDeps): Promise<
     }
   }
 
-  // 3. Checagem de saúde.
+  // 3. Checagem de saúde. Efeitos colaterais entram no diário para também serem desfeitos.
   if (!failure) {
     try {
-      const problem = await healthCheck(shell, fresh, plan, deps.catalog);
-      if (problem) failure = new Error(problem);
+      const health = await healthCheck(shell, fresh, plan, deps.catalog);
+      if (health.problem) failure = new Error(health.problem);
+      for (const pkg of health.unexpectedDisabled) {
+        journal.steps.push({ kind: 'disable', pkg, label: `Efeito colateral: ${pkg}`, status: 'done' });
+      }
+      if (health.unexpectedDisabled.length) await store.save(journal);
     } catch (err) {
       failure = err;
     }
@@ -142,28 +146,44 @@ export async function executePlan(plan: ChangePlan, deps: ExecuteDeps): Promise<
     await store.save(journal);
     return { planId: plan.id, status: 'interrupted', message: journal.message, steps: journal.steps, snapshotDir };
   }
-  const rolled = await rollbackJournal(journal, shell, grant, store);
+  const rolled = await rollbackJournal(journal, shell, grantForSteps(plan, journal), store);
   rolled.message = `${reason} — ${rolled.status === 'rolled-back' ? 'tudo o que tinha sido feito foi desfeito.' : rolled.message}`;
   journal.message = rolled.message;
   await store.save(journal);
   return { ...rolled, snapshotDir };
 }
 
+/** Autorização para desfazer: cobre os passos do diário (inclusive efeitos colaterais registrados). */
+function grantForSteps(plan: ChangePlan, journal: Journal): WriteGrant {
+  const actions = journal.steps.map((s) => ({ kind: s.kind, pkg: s.pkg, label: s.label, level: 'caution' as const, estimatedKb: null }));
+  const p = { ...plan, actions };
+  return WriteGrant.forPlan({ ...p, hash: hashPlan(p) });
+}
+
 /** Confere a TV depois do plano: responde, tem tela inicial e só mudou o que estava planejado. */
-async function healthCheck(shell: DeviceShell, before: DeviceInventory, plan: ChangePlan, catalog: Catalog): Promise<string | null> {
-  if ((await shell.state()) !== 'device') return 'A TV não respondeu depois das mudanças.';
+interface Health {
+  problem: string | null;
+  /** Apps que estavam ativos antes e ficaram desativados sem estar no plano (efeito colateral). */
+  unexpectedDisabled: string[];
+}
+
+async function healthCheck(shell: DeviceShell, before: DeviceInventory, plan: ChangePlan, catalog: Catalog): Promise<Health> {
+  const unexpectedDisabled: string[] = [];
+  if ((await shell.state()) !== 'device') return { problem: 'A TV não respondeu depois das mudanças.', unexpectedDisabled };
   const homeBefore = before.currentHome?.package ?? null;
   const homeAfter = parseResolveHome(await shell.resolveHome())?.package ?? null;
-  if (homeBefore && homeAfter !== homeBefore) return 'A tela inicial mudou inesperadamente.';
+  let problem: string | null = homeBefore && homeAfter !== homeBefore ? 'A tela inicial mudou inesperadamente.' : null;
   const beforeDisabled = new Set(before.packages.filter((p) => !p.enabled).map((p) => p.name));
   const afterDisabled = await disabledSet(shell);
   const expected = new Set(beforeDisabled);
   for (const a of plan.actions) a.kind === 'disable' ? expected.add(a.pkg) : expected.delete(a.pkg);
   for (const pkg of afterDisabled) {
-    if (!expected.has(pkg)) return `Um app fora do plano ficou desativado: ${pkg}.`;
-    if (!beforeDisabled.has(pkg) && classifyPackage(pkg, deviceContext(before), catalog).level === 'protected') return `Um app intocável ficou desativado: ${pkg}.`;
+    if (expected.has(pkg)) continue;
+    unexpectedDisabled.push(pkg);
+    const isProtected = classifyPackage(pkg, deviceContext(before), catalog).level === 'protected';
+    problem ??= isProtected ? `Um app intocável ficou desativado: ${pkg}.` : `Um app fora do plano ficou desativado: ${pkg}.`;
   }
-  return null;
+  return { problem, unexpectedDisabled };
 }
 
 /** Desfaz, em ordem inversa, os passos feitos (ou possivelmente feitos). */
@@ -226,8 +246,6 @@ export async function rollbackIncomplete(planId: string, currentSerial: string, 
     return { planId, status: 'refused', message: `Não consegui ler a TV: ${err instanceof Error ? err.message : err}`, steps: journal.steps };
   }
   if (inv.deviceId !== journal.deviceId) return { planId, status: 'refused', message: 'A TV conectada não é a mesma da mudança pendente.', steps: journal.steps };
-  const replan = { ...journal.plan, serial: currentSerial };
-  replan.hash = hashPlan(replan);
-  const result = await rollbackJournal(journal, shell, WriteGrant.forPlan(replan), store);
+  const result = await rollbackJournal(journal, shell, grantForSteps({ ...journal.plan, serial: currentSerial }, journal), store);
   return { ...result, snapshotDir: journal.snapshotDir };
 }

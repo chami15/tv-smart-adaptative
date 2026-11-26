@@ -120,6 +120,8 @@ export interface SnapshotSummary {
   dir: string;
   createdAt: string;
   device: string;
+  deviceId: string;
+  reason: string;
 }
 
 /** Lista snapshots existentes (do mais novo para o mais antigo). Ignora arquivos inválidos. */
@@ -144,7 +146,13 @@ export async function listSnapshots(dataDir: string): Promise<SnapshotSummary[]>
       try {
         const data = JSON.parse(await fs.readFile(path.join(dir, 'snapshot.json'), 'utf8')) as SnapshotFile;
         if (data.kind !== 'tvsa-snapshot') continue;
-        out.push({ dir, createdAt: data.createdAt, device: `${data.inventory.device.brand} ${data.inventory.device.model}` });
+        out.push({
+          dir,
+          createdAt: data.createdAt,
+          device: `${data.inventory.device.brand} ${data.inventory.device.model}`,
+          deviceId: data.inventory.deviceId,
+          reason: data.reason,
+        });
       } catch {
         /* pasta sem snapshot válido */
       }
