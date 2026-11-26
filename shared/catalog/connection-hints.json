@@ -1,0 +1,36 @@
+{
+  "$comment": "Dicas de conexão. Textos genéricos primeiro; dicas por marca são opcionais e só complementam. Nada de código com marca fixa: tudo fica aqui.",
+  "schemaVersion": 1,
+  "generic": {
+    "developerMode": [
+      "Na TV, abra Configurações.",
+      "Google TV: vá em Sistema → Sobre. Android TV mais antiga: Preferências do dispositivo → Sobre.",
+      "Desça até \"Build do Android TV OS\" (ou só \"Build\") e aperte OK 7 vezes, até aparecer \"Você agora é um desenvolvedor\"."
+    ],
+    "debugging": [
+      "Volte e abra Opções do desenvolvedor (em Sistema ou em Preferências do dispositivo).",
+      "Ative \"Depuração USB\" (em algumas TVs aparece como \"Depuração de rede\" ou \"Depuração ADB\").",
+      "Se a sua TV tiver \"Depuração por Wi-Fi\"/\"Depuração sem fio\", você também pode usar o pareamento por código (aba ao lado)."
+    ],
+    "findIp": [
+      "Configurações → Rede e Internet → toque no nome da sua rede Wi-Fi (ou Ethernet).",
+      "Anote o Endereço IP, algo como 192.168.0.25. O computador precisa estar na mesma rede."
+    ],
+    "accept": [
+      "Ao conectar, a TV mostra \"Permitir depuração?\". Marque \"Sempre permitir deste computador\" e escolha Permitir."
+    ],
+    "pairing": [
+      "Em Opções do desenvolvedor → Depuração por Wi-Fi → \"Parear dispositivo com código de pareamento\".",
+      "A TV mostra um IP com porta (ex.: 192.168.0.25:37123) e um código de 6 dígitos. Digite os dois aqui.",
+      "Depois de parear, conecte usando o IP e a porta que aparecem na tela \"Depuração por Wi-Fi\" (não é a porta do pareamento)."
+    ]
+  },
+  "brands": [
+    { "name": "TCL", "tip": "Google TV: Configurações → Sistema → Sobre → Build do Android TV OS." },
+    { "name": "Philips", "tip": "Configurações → Todas as configurações → Preferências do dispositivo → Sobre → Build." },
+    { "name": "Sony", "tip": "Configurações → Sistema → Sobre → Build do Android TV OS." },
+    { "name": "Xiaomi", "tip": "Mi Box / Mi TV: Configurações → Preferências do dispositivo → Sobre → Build." },
+    { "name": "Hisense", "tip": "Modelos Google TV: Configurações → Sistema → Sobre → Build do Android TV OS." },
+    { "name": "Semp / Multilaser / AOC", "tip": "Procure \"Sobre\" em Preferências do dispositivo ou Sistema; o item a clicar 7 vezes chama Build." }
+  ]
+}
