@@ -1,4 +1,6 @@
 import { checkAllowlist } from './allowlist.ts';
+import { checkWriteAllowlist, writeArgs } from './write-allowlist.ts';
+import { isWriteGrant, type WriteGrant } from '../changes/grant.ts';
 import { type AdbDeviceEntry, parseDevicesOutput } from './devices.ts';
 import { AdbError, classifyAdbFailure } from './errors.ts';
 import { AdbSpawnError, type AdbTransport } from './transport.ts';
@@ -42,6 +44,31 @@ export class AdbExecutor {
       throw new AdbError('UNKNOWN', err instanceof Error ? err.message : String(err));
     }
 
+    const stdout = normalize(result.stdout);
+    const stderr = normalize(result.stderr);
+    if (result.exitCode !== 0) {
+      const code = classifyAdbFailure(`${stderr}\n${stdout}`) ?? 'UNKNOWN';
+      throw new AdbError(code, firstLine(stderr) || firstLine(stdout) || `adb saiu com código ${result.exitCode}`, stderr);
+    }
+    return stdout;
+  }
+
+  /**
+   * Escrita na TV. Exige: comando na allowlist de escrita E autorização (WriteGrant) de um plano aprovado
+   * que contenha exatamente este comando.
+   */
+  async execWrite(args: readonly string[], grant: WriteGrant): Promise<string> {
+    if (!isWriteGrant(grant) || !grant.allows(args)) throw new AdbError('COMMAND_REFUSED', 'Escrita sem plano aprovado foi recusada.');
+    const decision = checkWriteAllowlist(args);
+    if (!decision.allowed) throw new AdbError('COMMAND_REFUSED', `Comando recusado: ${decision.reason}`);
+    this.options.onCommand?.(args);
+    let result;
+    try {
+      result = await this.transport.run(args, { timeoutMs: 20_000 });
+    } catch (err) {
+      if (err instanceof AdbSpawnError) throw new AdbError(err.kind === 'timeout' ? 'TIMEOUT' : err.kind === 'not-found' ? 'ADB_NOT_FOUND' : 'UNKNOWN', err.message);
+      throw new AdbError('UNKNOWN', err instanceof Error ? err.message : String(err));
+    }
     const stdout = normalize(result.stdout);
     const stderr = normalize(result.stderr);
     if (result.exitCode !== 0) {
@@ -126,6 +153,15 @@ export class DeviceShell {
   wmDensity(): Promise<string> {
     return this.run(['shell', 'wm', 'density']);
   }
+  /** Desativa/reativa um app. O pm pode "sair com sucesso" e ter falhado: a saída é conferida. */
+  async setEnabled(pkg: string, enabled: boolean, grant: WriteGrant): Promise<void> {
+    const out = await this.executor.execWrite(writeArgs(this.serial, enabled ? 'enable' : 'disable', pkg), grant);
+    const expected = enabled ? /new state:\s*enabled/i : /new state:\s*disabled(-user)?/i;
+    if (!expected.test(out)) {
+      throw new AdbError('UNEXPECTED_OUTPUT', firstLine(out) || 'A TV não confirmou a mudança.', out);
+    }
+  }
+
   resolveHome(): Promise<string> {
     return this.run([
       'shell', 'cmd', 'package', 'resolve-activity', '--brief',

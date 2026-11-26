@@ -5,3 +5,4 @@ export * from './executor.ts';
 export * from './locate.ts';
 export * from './transport.ts';
 export * from './validate.ts';
+export * from './write-allowlist.ts';
