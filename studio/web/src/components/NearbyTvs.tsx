@@ -4,10 +4,14 @@ import type { DiscoveredTv, DiscoveryResult } from '../types.ts';
 
 interface Props {
   busy: boolean;
+  /** host da TV → serial do adb, para TVs já conectadas e autorizadas. */
+  connected: Map<string, string>;
   onConnect: (host: string, port: number) => void;
+  onOpen: (serial: string) => void;
+  onHosts?: (hosts: string[]) => void;
 }
 
-export function NearbyTvs({ busy, onConnect }: Props) {
+export function NearbyTvs({ busy, connected, onConnect, onOpen, onHosts }: Props) {
   const [result, setResult] = useState<DiscoveryResult | null>(null);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -16,13 +20,15 @@ export function NearbyTvs({ busy, onConnect }: Props) {
     setSearching(true);
     setError(null);
     try {
-      setResult(await call<DiscoveryResult>('POST', '/api/discover', {}));
+      const r = await call<DiscoveryResult>('POST', '/api/discover', {});
+      setResult(r);
+      onHosts?.(r.tvs.map((t) => t.host));
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Não foi possível procurar.');
     } finally {
       setSearching(false);
     }
-  }, []);
+  }, [onHosts]);
 
   useEffect(() => {
     void search();
@@ -39,9 +45,7 @@ export function NearbyTvs({ busy, onConnect }: Props) {
             {searching
               ? 'Procurando… (leva poucos segundos)'
               : result
-                ? result.networks.length
-                  ? `Rede ${result.networks.map((n) => `${n.prefix24}.x`).join(', ')} · ${tvs.length} ${tvs.length === 1 ? 'aparelho' : 'aparelhos'}`
-                  : 'Este computador não parece estar numa rede de casa (Wi-Fi ou cabo).'
+                ? describeNetworks(result)
                 : ''}
           </p>
         </div>
@@ -70,7 +74,7 @@ export function NearbyTvs({ busy, onConnect }: Props) {
       {tvs.length > 0 && (
         <ul className="tv-list" aria-label="TVs encontradas">
           {tvs.map((tv) => (
-            <TvItem key={tv.host} tv={tv} busy={busy} onConnect={onConnect} />
+            <TvItem key={tv.host} tv={tv} busy={busy} serial={connected.get(tv.host)} onConnect={onConnect} onOpen={onOpen} />
           ))}
         </ul>
       )}
@@ -78,8 +82,42 @@ export function NearbyTvs({ busy, onConnect }: Props) {
   );
 }
 
-function TvItem({ tv, busy, onConnect }: { tv: DiscoveredTv; busy: boolean; onConnect: Props['onConnect'] }) {
+/** Mostra só as redes onde há TV; as outras (virtuais, VPN…) só entram na contagem. */
+export function describeNetworks(result: DiscoveryResult): string {
+  if (!result.networks.length) return 'Este computador não parece estar numa rede de casa (Wi-Fi ou cabo).';
+  const n = result.tvs.length;
+  if (!n) return `Nenhum aparelho encontrado (${result.networks.length} ${result.networks.length === 1 ? 'rede verificada' : 'redes verificadas'}).`;
+  const withTv = result.networks.filter((net) => result.tvs.some((t) => t.host.startsWith(net.prefix24 + '.')));
+  return `${n} ${n === 1 ? 'aparelho' : 'aparelhos'} na rede ${withTv.map((net) => `${net.prefix24}.x`).join(', ')}`;
+}
+
+interface ItemProps {
+  tv: DiscoveredTv;
+  busy: boolean;
+  serial: string | undefined;
+  onConnect: Props['onConnect'];
+  onOpen: Props['onOpen'];
+}
+
+function TvItem({ tv, busy, serial, onConnect, onOpen }: ItemProps) {
   const title = tv.name ?? tv.model ?? 'Aparelho sem nome';
+  if (serial) {
+    return (
+      <li className="tv-item ready">
+        <div className="tv-head">
+          <span className="tv-icon" aria-hidden>▭</span>
+          <div className="tv-info">
+            <b title={title}>{title}</b>
+            <span className="muted small">{tv.host}{tv.name && tv.model ? ` · ${tv.model}` : ''}</span>
+          </div>
+        </div>
+        <div className="tv-foot">
+          <span className="pill ok">Conectada</span>
+          <button onClick={() => onOpen(serial)} aria-label={`Abrir ${title}`}>Abrir</button>
+        </div>
+      </li>
+    );
+  }
   return (
     <li className={`tv-item ${tv.debuggingEnabled ? 'ready' : 'off'}`}>
       <div className="tv-head">

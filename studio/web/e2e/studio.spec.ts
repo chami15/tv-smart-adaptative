@@ -170,6 +170,20 @@ test.describe('Fase 1.1 — TVs encontradas na rede', () => {
     await expect(page.getByRole('list', { name: 'TVs encontradas' }).getByText('TV da Sala')).toBeVisible();
   });
 
+  // Relato do usuário: TV conectada aparecia duas vezes ("Conectar" na lista e "TV já conectada" embaixo).
+  test('TV já conectada aparece uma vez só, como "Conectada" com botão Abrir', async ({ page }) => {
+    await open(page);
+    await page.getByRole('button', { name: 'Conectar a Bravia do Escritório' }).click();
+    await expect(page.getByTestId('tv-title')).toHaveText('Sony XR-55X90K', { timeout: 20_000 });
+    await page.reload();
+    const item = page.locator('.tv-item', { hasText: 'Bravia do Escritório' });
+    await expect(item.getByText('Conectada')).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText('TV já conectada')).toHaveCount(0);
+    await page.getByRole('button', { name: 'Abrir Bravia do Escritório' }).click();
+    await expect(page.getByTestId('tv-title')).toHaveText('Sony XR-55X90K', { timeout: 20_000 });
+    await disconnectIfOnTv(page);
+  });
+
   test('tela de celular não tem rolagem para o lado', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await open(page);

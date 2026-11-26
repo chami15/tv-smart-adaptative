@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import hints from '../../../../shared/catalog/connection-hints.json';
 import { parseAddress } from '../address.ts';
 import { ApiError, call } from '../api.ts';
@@ -22,7 +22,14 @@ export function ConnectWizard({ status, message, onConnected, onOpen }: Props) {
   const [pairAddress, setPairAddress] = useState('');
   const [pairCode, setPairCode] = useState('');
 
-  const ready = status.devices.filter((d) => d.state === 'device');
+  const [listedHosts, setListedHosts] = useState<string[]>([]);
+  const onHosts = useCallback((hosts: string[]) => setListedHosts(hosts), []);
+  const connected = useMemo(
+    () => new Map(status.devices.filter((d) => d.state === 'device').map((d) => [d.serial.split(':')[0]!, d.serial])),
+    [status.devices],
+  );
+  // TVs conectadas que não aparecem na lista da rede (ex.: conectadas por outro caminho)
+  const ready = status.devices.filter((d) => d.state === 'device' && !listedHosts.includes(d.serial.split(':')[0]!));
 
   async function connect(e?: React.FormEvent) {
     e?.preventDefault();
@@ -71,7 +78,7 @@ export function ConnectWizard({ status, message, onConnected, onOpen }: Props) {
     <div className="stack">
       {message && <Notice tone="warn" title="Atenção">{message}</Notice>}
       {info && <Notice tone="ok" title="Tudo certo">{info}</Notice>}
-      <NearbyTvs busy={busy} onConnect={(h, p) => void connectTo(h, p)} />
+      <NearbyTvs busy={busy} connected={connected} onConnect={(h, p) => void connectTo(h, p)} onOpen={onOpen} onHosts={onHosts} />
     <div className="grid">
       <section className="card">
         <h2>Conectar à TV</h2>

@@ -1,4 +1,4 @@
-# Fase 1.1 — Encontrar TVs na rede + refinamentos da tela 🟨
+# Fase 1.1 — Encontrar TVs na rede + refinamentos da tela ✅
 
 **Objetivo:** o Studio lista sozinho as TVs da rede de casa, para o usuário não precisar ir até a TV
 descobrir o IP; e a tela passa a usar melhor a largura do monitor, mantendo tudo simples.
@@ -47,8 +47,9 @@ privada do próprio usuário.
 - Etapas 1–5 feitas. No teste como usuário, os cartões das TVs ficavam apertados (selo quebrando em duas
   linhas e nomes cortados) — reorganizados e conferidos em 1920px, 1280px e celular (sem rolagem lateral,
   agora coberto por teste e2e).
-- A busca real não pôde ser testada aqui (o ambiente de desenvolvimento não tem rede doméstica);
-  **falta o usuário confirmar na rede de casa** que a TV dele aparece na lista.
+- **Confirmado na rede do usuário (26/11/2026):** a TV apareceu com o nome dado pelo dono e "Pronta para conectar".
+- Refinamentos após o teste real (com testes): TV conectada aparecia duplicada → agora o cartão mostra
+  "Conectada · Abrir"; a linha de redes listava redes virtuais (VirtualBox/WSL) → mostra só a rede da TV.
 - **Bugs relatados pelo usuário ao atualizar** (todos com teste de regressão em `scripts/tests/` e
   `studio/server/tests/regression-bug-20261126-versao.test.ts`):
   1. `git pull` abortava porque o `npm install` no Windows reescrevia o `package-lock.json` → instalações
