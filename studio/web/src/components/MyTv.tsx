@@ -39,6 +39,7 @@ export function MyTv({ serial, inventory: inv, onRefresh, onDisconnect }: Props)
     });
   }, [inv, filter, query]);
 
+  const complete = inv.packages.length > 0 && inv.device.platform !== 'unknown';
   const used = inv.memory.totalKb && inv.memory.availableKb !== null ? inv.memory.totalKb - inv.memory.availableKb : null;
   const usedPct = used !== null && inv.memory.totalKb ? Math.round((used / inv.memory.totalKb) * 100) : null;
   const memByName = new Map(inv.processes.map((p) => [p.name, p.kb]));
@@ -59,7 +60,7 @@ export function MyTv({ serial, inventory: inv, onRefresh, onDisconnect }: Props)
         <div>
           <p className="muted small">Minha TV</p>
           <h2 data-testid="tv-title">
-            {inv.device.brand} {inv.device.model}
+            {complete ? `${inv.device.brand} ${inv.device.model}` : 'TV não identificada'}
           </h2>
           <p>
             <span className={`pill ${inv.device.supported ? 'ok' : 'warn'}`}>{inv.device.platformLabel}</span> Android{' '}
@@ -69,13 +70,21 @@ export function MyTv({ serial, inventory: inv, onRefresh, onDisconnect }: Props)
           </p>
         </div>
         <div className="actions">
-          <button onClick={saveSnapshot} disabled={snap.busy}>{snap.busy ? 'Salvando…' : 'Salvar backup agora'}</button>
-          <button className="secondary" onClick={onRefresh}>Ler de novo</button>
+          {complete && (
+            <button onClick={saveSnapshot} disabled={snap.busy}>{snap.busy ? 'Salvando…' : 'Salvar backup agora'}</button>
+          )}
+          <button className={complete ? 'secondary' : ''} onClick={onRefresh}>Ler de novo</button>
           <button className="ghost" onClick={onDisconnect}>Desconectar</button>
         </div>
       </section>
 
-      {!inv.device.supported && <Notice tone="warn" title="Esta TV ainda não é suportada para personalização">{inv.device.supportReason}</Notice>}
+      {!complete && (
+        <Notice tone="error" title="A leitura da TV veio incompleta">
+          A conexão pode estar instável. Clique em <b>Ler de novo</b>. Enquanto a leitura não vier completa, o backup fica
+          desativado para não salvar algo que não serviria para restaurar a TV.
+        </Notice>
+      )}
+      {complete && !inv.device.supported && <Notice tone="warn" title="Esta TV ainda não é suportada para personalização">{inv.device.supportReason}</Notice>}
       {inv.warnings.length > 0 && (
         <Notice tone="warn" title="Algumas informações não puderam ser lidas">
           <ul>{inv.warnings.map((w) => <li key={w}>{w}</li>)}</ul>

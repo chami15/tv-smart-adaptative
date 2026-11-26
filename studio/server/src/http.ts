@@ -7,7 +7,7 @@ import { timingSafeEqual } from 'node:crypto';
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
-import { AdbError, USER_MESSAGES, isValidHost, isValidPairingCode, isValidPort, isValidSerial } from '@tvsa/core';
+import { AdbError, SnapshotError, USER_MESSAGES, isValidHost, isValidPairingCode, isValidPort, isValidSerial } from '@tvsa/core';
 import type { StudioService } from './service.ts';
 
 export interface HttpOptions {
@@ -204,6 +204,11 @@ const ADB_STATUS: Partial<Record<string, number>> = {
 function sendError(res: http.ServerResponse, err: unknown): void {
   if (res.headersSent) return void res.end();
   if (err instanceof HttpError) return sendJson(res, err.status, { error: { code: err.code, message: err.message } });
+  if (err instanceof SnapshotError) {
+    return sendJson(res, 422, {
+      error: { code: err.code, message: 'A leitura da TV veio incompleta, então o backup não foi salvo. Clique em "Ler de novo" e tente outra vez.' },
+    });
+  }
   if (err instanceof AdbError) {
     const message = err.code === 'INVALID_ARGUMENT' ? err.message : USER_MESSAGES[err.code];
     return sendJson(res, ADB_STATUS[err.code] ?? 502, { error: { code: err.code, message, detail: err.message } });

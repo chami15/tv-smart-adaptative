@@ -36,6 +36,20 @@ export function deviceFolder(inv: DeviceInventory): string {
   return safeSegment(`${inv.device.brand}-${inv.device.model}-${inv.deviceId}`, inv.deviceId);
 }
 
+export class SnapshotError extends Error {
+  readonly code: 'INCOMPLETE_INVENTORY';
+  constructor(message: string) {
+    super(message);
+    this.name = 'SnapshotError';
+    this.code = 'INCOMPLETE_INVENTORY';
+  }
+}
+
+/** Um backup só vale se der para restaurar a partir dele: precisa identificar o aparelho e listar os apps. */
+export function isInventoryComplete(inv: DeviceInventory): boolean {
+  return inv.packages.length > 0 && inv.device.platform !== 'unknown' && Object.keys(inv.props).length > 0;
+}
+
 export interface SnapshotResult {
   dir: string;
   files: string[];
@@ -55,6 +69,9 @@ export async function writeSnapshot(
   dataDir: string,
   options: { now?: Date; reason?: string } = {},
 ): Promise<SnapshotResult> {
+  if (!isInventoryComplete(inv)) {
+    throw new SnapshotError('A leitura da TV veio incompleta ou corrompida; um backup assim não serviria para restaurar.');
+  }
   const now = options.now ?? new Date();
   const base = path.join(dataDir, 'backups', deviceFolder(inv));
   await fs.mkdir(base, { recursive: true });
