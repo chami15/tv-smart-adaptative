@@ -38,6 +38,8 @@ export interface DeviceInventory {
   display: { width: number | null; height: number | null; density: number | null; resolutionClass: ResolutionClass };
   currentHome: P.ComponentName | null;
   packages: PackageInfo[];
+  /** Recursos declarados pelo sistema (ex.: android.software.leanback). */
+  features: string[];
   processes: P.ProcessMemory[];
   capabilities: CapabilityStatus[];
   /** Somente propriedades sem dados pessoais (lista fixa abaixo). */
@@ -120,6 +122,7 @@ export async function collectInventory(shell: DeviceShell, now = new Date()): Pr
     packages: all
       .map((name) => ({ name, system: system.has(name), enabled: !disabled.has(name) }))
       .sort((a, b) => a.name.localeCompare(b.name)),
+    features: [...features].sort(),
     processes: processes.slice(0, 30),
     capabilities: androidCapabilities(detection),
     props,
