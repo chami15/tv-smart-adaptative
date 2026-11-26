@@ -1,4 +1,6 @@
-# Fase 2 — Núcleo de segurança para escrita 📝
+# Fase 2 — Núcleo de segurança para escrita 🟨
+
+> Aprovada em 26/11/2026 com a opção B: emendar direto na Fase 3 (TV real só após aprovação).
 
 **Objetivo:** construir o "motor de mudanças" que todas as próximas fases vão usar: toda alteração na TV vira
 um **plano** revisável, com backup antes, execução passo a passo, conferência depois de cada passo e
