@@ -2,3 +2,7 @@ node_modules/
 backups/
 *.apk
 .claude/settings.local.json
+dist/
+playwright-report/
+test-results/
+.tvsa-test-home/
