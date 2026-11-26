@@ -1,0 +1,10 @@
+{
+  "$comment": "Boxes genéricas com chip Amlogic (Droidlogic). Casada pelo fabricante, não pela marca.",
+  "schemaVersion": 1,
+  "match": { "manufacturer": ["Amlogic"] },
+  "packages": {
+    "com.droidlogic.*": { "level": "caution", "label": "Componente do fabricante do chip", "effect": "Função de vídeo/entrada do aparelho pode parar." },
+    "com.droidlogic.tvinput": { "level": "protected", "label": "Entradas de TV (Amlogic)" },
+    "com.droidlogic.mboxlauncher": { "level": "protected", "label": "Tela inicial do aparelho" }
+  }
+}

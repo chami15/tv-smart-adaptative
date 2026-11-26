@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "match": { "brand": ["Sony"], "manufacturer": ["Sony"] },
+  "packages": {
+    "com.sony.dtv.tvx": { "level": "protected", "label": "TV e entradas (Sony)" },
+    "com.sony.dtv.settings": { "level": "protected", "label": "Configurações (Sony)" },
+    "com.sony.dtv.sonyselect": { "level": "safe", "label": "Sony Select (sugestões)" },
+    "com.sony.dtv.discovery": { "level": "caution", "label": "Menu Descobrir (Sony)", "effect": "O atalho Descobrir do controle pode parar." }
+  }
+}

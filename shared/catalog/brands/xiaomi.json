@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "match": { "brand": ["Xiaomi"], "manufacturer": ["Xiaomi"] },
+  "packages": {
+    "com.xiaomi.mitv.updateservice": { "level": "caution", "label": "Atualização de sistema (Xiaomi)", "effect": "O aparelho pode parar de receber atualizações." },
+    "com.mitv.tvhome.atv": { "level": "caution", "label": "Tela inicial PatchWall (Xiaomi)", "effect": "Pode mudar a tela inicial; prefira a Fase 4." }
+  }
+}

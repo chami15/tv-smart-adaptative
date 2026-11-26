@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "match": { "brand": ["Philips"], "manufacturer": ["TPVision", "TP Vision"] },
+  "packages": {
+    "org.droidtv.playtv": { "level": "protected", "label": "TV e canais (Philips)" },
+    "org.droidtv.settings": { "level": "protected", "label": "Configurações (Philips)" },
+    "org.droidtv.channels": { "level": "protected", "label": "Lista de canais (Philips)" },
+    "org.droidtv.tvmediaplayer": { "level": "caution", "label": "Player de mídia (Philips)", "effect": "Vídeos/fotos do pen drive podem não abrir." },
+    "org.droidtv.nettvbrowser": { "level": "safe", "label": "Navegador Net TV (Philips)" },
+    "org.droidtv.welcome": { "level": "safe", "label": "Boas-vindas (Philips)" }
+  }
+}

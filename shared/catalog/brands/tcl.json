@@ -1,0 +1,17 @@
+{
+  "$comment": "TCL. Fontes: relatos públicos de limpeza (ver docs/PESQUISA.md). Em dúvida, 'caution'.",
+  "schemaVersion": 1,
+  "match": { "brand": ["TCL"], "manufacturer": ["TCL"] },
+  "packages": {
+    "com.tcl.tv": { "level": "protected", "label": "TV, canais e entradas (TCL)" },
+    "com.tcl.tvinput": { "level": "protected", "label": "Entradas HDMI e antena (TCL)" },
+    "com.tcl.suspension": { "level": "protected", "label": "Painel rápido de entradas (TCL)" },
+    "com.tcl.ttvs": { "level": "caution", "label": "Atualização de sistema (TCL)", "effect": "A TV pode parar de receber atualizações automáticas." },
+    "com.tcl.waterfall.overseas": { "level": "caution", "label": "Conteúdo da tela inicial (TCL)", "effect": "Algumas faixas de conteúdo/anúncios da TCL somem da tela inicial." },
+    "com.tcl.guard": { "level": "safe", "label": "TCL Guard (limpeza da TCL)" },
+    "com.tcl.esticker": { "level": "safe", "label": "Anúncios/etiquetas na tela (TCL)" },
+    "com.tcl.usercenter": { "level": "safe", "label": "Conta TCL" },
+    "com.tcl.weather": { "level": "safe", "label": "Clima (TCL)" },
+    "com.tcl.appmarket": { "level": "safe", "label": "Loja de apps TCL" }
+  }
+}
