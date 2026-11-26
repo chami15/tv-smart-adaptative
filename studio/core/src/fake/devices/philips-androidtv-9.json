@@ -1,0 +1,250 @@
+{
+  "id": "philips-androidtv-9",
+  "description": "Philips com Android TV 9, 1,5 GB de RAM, Full HD (simulado)",
+  "simulated": true,
+  "props": {
+    "ro.build.version.release": "9",
+    "ro.build.version.sdk": "28",
+    "ro.product.brand": "Philips",
+    "ro.product.manufacturer": "TPVision",
+    "ro.product.model": "43PFG6825",
+    "ro.product.device": "QM163E",
+    "ro.product.name": "QM163E",
+    "ro.build.characteristics": "tv",
+    "ro.build.type": "user",
+    "ro.build.display.id": "QM163E-user 9",
+    "ro.serialno": "SIMULADO0001",
+    "persist.sys.locale": "pt-BR",
+    "net.hostname": "tv-sala-simulada",
+    "ro.hardware": "mt5862",
+    "ro.board.platform": "mt5862"
+  },
+  "features": [
+    "feature:android.software.leanback",
+    "feature:android.software.leanback_only",
+    "feature:android.hardware.type.television",
+    "feature:android.software.live_tv",
+    "feature:android.hardware.wifi"
+  ],
+  "packages": [
+    {
+      "name": "android",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.systemui",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.tv.settings",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.providers.settings",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.providers.media",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.providers.downloads",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.providers.tv",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.shell",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.bluetooth",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.inputmethod.latin",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.webview",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.externalstorage",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.printspooler",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.wallpaperbackup",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.gms",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.gsf",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.vending",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.packageinstaller",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.tv.remote.service",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.katniss",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.tvrecommendations",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.youtube.tv",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.apps.mediashell",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.play.games",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.videos",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.tts",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.feedback",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.marvin.talkback",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.tvlauncher",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.leanbacklauncher.recommendations",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.netflix.ninja",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.amazon.amazonvideo.livingroom",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "org.droidtv.playtv",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "org.droidtv.settings",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "org.droidtv.channels",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "org.droidtv.nettvbrowser",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "org.droidtv.welcome",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "org.droidtv.tvmediaplayer",
+      "system": true,
+      "enabled": true
+    }
+  ],
+  "memory": {
+    "totalKb": 1484800,
+    "availableKb": 307200,
+    "freeKb": 122880
+  },
+  "processes": [
+    {
+      "name": "com.google.android.tvlauncher",
+      "pssKb": 120000
+    },
+    {
+      "name": "com.google.android.gms",
+      "pssKb": 90000
+    },
+    {
+      "name": "org.droidtv.playtv",
+      "pssKb": 70000
+    },
+    {
+      "name": "com.android.systemui",
+      "pssKb": 40000
+    }
+  ],
+  "display": {
+    "width": 1920,
+    "height": 1080,
+    "density": 240
+  },
+  "home": "com.google.android.tvlauncher/.MainActivity"
+}

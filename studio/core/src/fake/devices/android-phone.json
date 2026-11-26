@@ -1,0 +1,121 @@
+{
+  "id": "android-phone",
+  "description": "Celular Android conectado por engano (simulado)",
+  "simulated": true,
+  "props": {
+    "ro.build.version.release": "14",
+    "ro.build.version.sdk": "34",
+    "ro.product.brand": "motorola",
+    "ro.product.manufacturer": "motorola",
+    "ro.product.model": "moto g54",
+    "ro.product.device": "cancunf",
+    "ro.product.name": "cancunf",
+    "ro.build.characteristics": "default",
+    "ro.build.type": "user",
+    "ro.build.display.id": "cancunf-user 14",
+    "ro.serialno": "SIMULADO0001",
+    "persist.sys.locale": "pt-BR",
+    "net.hostname": "tv-sala-simulada",
+    "ro.hardware": "mt6855",
+    "ro.board.platform": "mt6855"
+  },
+  "features": [
+    "feature:android.hardware.touchscreen",
+    "feature:android.hardware.telephony",
+    "feature:android.hardware.wifi"
+  ],
+  "packages": [
+    {
+      "name": "android",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.systemui",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.providers.settings",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.providers.media",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.providers.downloads",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.providers.tv",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.shell",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.bluetooth",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.inputmethod.latin",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.webview",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.externalstorage",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.printspooler",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.wallpaperbackup",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.settings",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.motorola.launcher3",
+      "system": true,
+      "enabled": true
+    }
+  ],
+  "memory": {
+    "totalKb": 7782400,
+    "availableKb": 3072000,
+    "freeKb": 1228800
+  },
+  "processes": [
+    {
+      "name": "com.motorola.launcher3",
+      "pssKb": 150000
+    }
+  ],
+  "display": {
+    "width": 1080,
+    "height": 2400,
+    "density": 400
+  },
+  "home": "com.motorola.launcher3/com.android.launcher3.uioverrides.QuickstepLauncher"
+}

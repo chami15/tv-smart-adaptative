@@ -1,0 +1,321 @@
+{
+  "id": "tcl-googletv-2gb",
+  "description": "TCL com Google TV, 2 GB de RAM, 4K (simulado)",
+  "simulated": true,
+  "props": {
+    "ro.build.version.release": "12",
+    "ro.build.version.sdk": "31",
+    "ro.product.brand": "TCL",
+    "ro.product.manufacturer": "TCL",
+    "ro.product.model": "Smart TV Pro",
+    "ro.product.device": "g10",
+    "ro.product.name": "g10",
+    "ro.build.characteristics": "tv",
+    "ro.build.type": "user",
+    "ro.build.display.id": "g10-user 12",
+    "ro.serialno": "SIMULADO0001",
+    "persist.sys.locale": "pt-BR",
+    "net.hostname": "tv-sala-simulada",
+    "ro.hardware": "mt5867",
+    "ro.board.platform": "mt5867",
+    "ro.com.google.clientidbase": "android-tcl"
+  },
+  "features": [
+    "feature:android.software.leanback",
+    "feature:android.software.leanback_only",
+    "feature:android.hardware.type.television",
+    "feature:android.software.live_tv",
+    "feature:android.hardware.wifi",
+    "feature:com.google.android.tv.installed"
+  ],
+  "packages": [
+    {
+      "name": "android",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.systemui",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.tv.settings",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.providers.settings",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.providers.media",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.providers.downloads",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.providers.tv",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.shell",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.bluetooth",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.inputmethod.latin",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.webview",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.externalstorage",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.printspooler",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.wallpaperbackup",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.gms",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.gsf",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.vending",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.packageinstaller",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.tv.remote.service",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.katniss",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.tvrecommendations",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.youtube.tv",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.apps.mediashell",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.play.games",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.videos",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.tts",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.feedback",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.marvin.talkback",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.apps.tv.launcherx",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.tungsten.setupwraith",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.apps.tv.dreamx",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.tv.assistant",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.netflix.ninja",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.amazon.amazonvideo.livingroom",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.disney.disneyplus",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.tcl.tv",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.tcl.tvinput",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.tcl.waterfall.overseas",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.tcl.ttvs",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.tcl.suspension",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.tcl.guard",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.tcl.esticker",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.tcl.usercenter",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.tcl.weather",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.tcl.appmarket",
+      "system": true,
+      "enabled": false
+    },
+    {
+      "name": "com.globo.globotv",
+      "system": false,
+      "enabled": true
+    },
+    {
+      "name": "br.com.spotify.tv",
+      "system": false,
+      "enabled": true
+    }
+  ],
+  "memory": {
+    "totalKb": 1945600,
+    "availableKb": 532480,
+    "freeKb": 212992
+  },
+  "processes": [
+    {
+      "name": "com.google.android.apps.tv.launcherx",
+      "pssKb": 192000
+    },
+    {
+      "name": "com.google.android.gms",
+      "pssKb": 98000
+    },
+    {
+      "name": "com.tcl.waterfall.overseas",
+      "pssKb": 61000
+    },
+    {
+      "name": "com.google.android.katniss",
+      "pssKb": 54000
+    },
+    {
+      "name": "com.tcl.tv",
+      "pssKb": 48000
+    },
+    {
+      "name": "com.android.systemui",
+      "pssKb": 46000
+    },
+    {
+      "name": "com.tcl.guard",
+      "pssKb": 31000
+    },
+    {
+      "name": "com.google.android.apps.mediashell",
+      "pssKb": 29000
+    },
+    {
+      "name": "com.tcl.esticker",
+      "pssKb": 18000
+    }
+  ],
+  "display": {
+    "width": 3840,
+    "height": 2160,
+    "density": 320
+  },
+  "home": "com.google.android.apps.tv.launcherx/com.google.android.apps.tv.launcherx.home.HomeActivity",
+  "behavior": {
+    "auth": "accept",
+    "acceptAfterPolls": 2
+  }
+}

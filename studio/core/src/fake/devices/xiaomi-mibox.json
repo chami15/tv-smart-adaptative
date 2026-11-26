@@ -1,0 +1,230 @@
+{
+  "id": "xiaomi-mibox",
+  "description": "Xiaomi Mi Box S com Android TV 9, 2 GB, 4K (simulado)",
+  "simulated": true,
+  "props": {
+    "ro.build.version.release": "9",
+    "ro.build.version.sdk": "28",
+    "ro.product.brand": "Xiaomi",
+    "ro.product.manufacturer": "Xiaomi",
+    "ro.product.model": "MIBOX4",
+    "ro.product.device": "once",
+    "ro.product.name": "once",
+    "ro.build.characteristics": "tv,nosdcard",
+    "ro.build.type": "user",
+    "ro.build.display.id": "once-user 9",
+    "ro.serialno": "SIMULADO0001",
+    "persist.sys.locale": "pt-BR",
+    "net.hostname": "tv-sala-simulada",
+    "ro.hardware": "amlogic",
+    "ro.board.platform": "amlogic"
+  },
+  "features": [
+    "feature:android.software.leanback",
+    "feature:android.software.leanback_only",
+    "feature:android.hardware.type.television",
+    "feature:android.hardware.wifi"
+  ],
+  "packages": [
+    {
+      "name": "android",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.systemui",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.tv.settings",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.providers.settings",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.providers.media",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.providers.downloads",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.providers.tv",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.shell",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.bluetooth",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.inputmethod.latin",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.webview",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.externalstorage",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.printspooler",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.wallpaperbackup",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.gms",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.gsf",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.android.vending",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.packageinstaller",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.tv.remote.service",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.katniss",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.tvrecommendations",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.youtube.tv",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.apps.mediashell",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.play.games",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.videos",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.tts",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.feedback",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.marvin.talkback",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.tvlauncher",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.google.android.leanbacklauncher.recommendations",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.netflix.ninja",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.amazon.amazonvideo.livingroom",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.xiaomi.mitv.updateservice",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "com.mitv.tvhome.atv",
+      "system": true,
+      "enabled": true
+    },
+    {
+      "name": "org.videolan.vlc",
+      "system": false,
+      "enabled": true
+    }
+  ],
+  "memory": {
+    "totalKb": 1996800,
+    "availableKb": 798720,
+    "freeKb": 319488
+  },
+  "processes": [
+    {
+      "name": "com.google.android.tvlauncher",
+      "pssKb": 110000
+    },
+    {
+      "name": "com.google.android.gms",
+      "pssKb": 85000
+    },
+    {
+      "name": "com.android.systemui",
+      "pssKb": 38000
+    }
+  ],
+  "display": {
+    "width": 3840,
+    "height": 2160,
+    "density": 320
+  },
+  "home": "com.google.android.tvlauncher/.MainActivity"
+}
