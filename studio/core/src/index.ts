@@ -1,2 +1,3 @@
-// Ponto de entrada do core. Os módulos são exportados conforme as etapas da Fase 1.
-export {};
+export * from './adb/index.ts';
+export * from './drivers/index.ts';
+export * from './inventory/index.ts';
