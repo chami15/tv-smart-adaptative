@@ -50,6 +50,11 @@ button {
   background: var(--accent); color: #fff; font-weight: 600;
 }
 button:hover:not(:disabled) { background: var(--accent-2); }
+button.secondary:hover:not(:disabled), button.ghost:hover:not(:disabled), .chip:hover:not(:disabled) { background: var(--panel-2); color: var(--text); border-color: var(--accent); }
+button.link:hover:not(:disabled) { background: none; color: var(--accent-2); }
+.switch button:hover:not(:disabled):not(.active) { background: var(--panel-2); color: var(--text); }
+.chip.active:hover:not(:disabled) { background: var(--accent-2); color: #fff; }
+.tabs button:hover:not(:disabled) { background: none; color: var(--text); }
 button:disabled { opacity: 0.6; cursor: progress; }
 button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 button.secondary { background: var(--panel-2); color: var(--text); border: 1px solid var(--line); }
@@ -132,3 +137,33 @@ summary { cursor: pointer; font-weight: 600; }
 @keyframes shimmer { to { background-position: -200% 0; } }
 @media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
 .apps td.mono { max-width: 0; width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Fase 3: limpeza, plano, backups */
+.switch { display: inline-flex; gap: 4px; padding: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; justify-self: start; flex-wrap: wrap; }
+.switch button { background: transparent; color: var(--muted); padding: 8px 16px; }
+.switch button.active { background: var(--accent); color: #fff; }
+.search { max-width: 280px; }
+.pick-list { list-style: none; padding: 0; margin: 8px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 8px; }
+.pick-list label { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); cursor: pointer; }
+.pick-list label:has(input:checked) { border-color: var(--accent); }
+.pick-list input { width: 18px; height: 18px; margin-top: 2px; flex: none; accent-color: var(--accent); }
+.pick-main { display: grid; gap: 2px; flex: 1; min-width: 0; }
+.pick-main .mono { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pick-mem { flex: none; color: var(--muted); }
+.warn-text { color: var(--warn); }
+.ok-text { color: var(--ok); }
+.locked-list { list-style: none; padding: 0; display: grid; gap: 6px; }
+.selection-bar { position: sticky; bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 16px; background: var(--panel); border: 1px solid var(--accent); border-radius: 12px; box-shadow: 0 8px 24px rgb(0 0 0 / 0.25); }
+.actions-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+.selection-bar .actions-row { margin-top: 0; }
+.plan-list { display: grid; gap: 8px; padding-left: 22px; }
+.big-title { font-size: 1.15rem; font-weight: 700; margin: 4px 0; }
+.steps-list { list-style: none; padding: 0; display: grid; gap: 4px; }
+.stats.compact { grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 12px 0; }
+.stats.compact > div { padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); }
+.backup-list { list-style: none; padding: 0; display: grid; gap: 8px; }
+.backup-list li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); }
+.backup-list li > div { display: grid; gap: 2px; min-width: 0; }
+.backup-list .mono { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pending-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+@media (max-width: 560px) { .stats.compact { grid-template-columns: 1fr; } .pick-list { grid-template-columns: 1fr; } }

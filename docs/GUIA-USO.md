@@ -46,7 +46,18 @@ O próprio Studio mostra o passo a passo. Resumo:
 - [ ] (Opcional, se quiser ajudar) exportar o inventário anônimo:
       `npm run export:fixture -- "<pasta do backup>"` e me enviar o arquivo gerado.
 
-## 5. Desfazer / segurança
+## 5. Limpar memória (Fase 3)
+Em **Minha TV → Limpar memória**:
+1. 🟢 *Recomendados*: seguros. 🟡 *Com cuidado*: cada um diz o que você perde. 🔴 *Intocáveis*: nunca mudam.
+2. Marque o que quiser → **Revisar plano** → confira → **Aplicar**.
+3. O Studio salva um backup, aplica um passo de cada vez e confere. Se algo falhar, desfaz sozinho.
+4. No fim aparece a memória livre antes e depois, e o botão **Desfazer tudo**.
+5. Em **Backups** você volta a TV para qualquer backup.
+
+> Na sua TV real, por enquanto, o Studio mostra a prévia do plano mas o botão **Aplicar** fica bloqueado
+> até você liberar.
+
+## 6. Desfazer / segurança
 Nesta fase o Studio **só lê**. Para encerrar o acesso: desligue a "Depuração USB" na TV.
 Os backups ficam só no seu computador.
 

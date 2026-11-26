@@ -146,6 +146,7 @@ export class FakeTvWorld implements AdbTransport {
     const n = (this.writes.get(host) ?? 0) + 1;
     if (b.dropAfterWrites !== undefined && n > b.dropAfterWrites) {
       s.offline = true;
+      if (b.dropOnce) delete b.dropAfterWrites;
       return { stdout: '', stderr: 'error: device offline\n', exitCode: 1 };
     }
     this.writes.set(host, n);

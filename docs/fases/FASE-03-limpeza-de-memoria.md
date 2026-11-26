@@ -11,14 +11,15 @@ real, mostra a prévia do plano.
 **Fora de escopo:** launcher novo (Fase 4); desinstalar qualquer coisa (proibido).
 
 ## Entregáveis
-- [ ] Catálogo com rótulos em português e efeitos ("a busca por voz para de funcionar") para Android/Google
+- [x] Catálogo com rótulos em português e efeitos ("a busca por voz para de funcionar") para Android/Google
       e para as marcas já simuladas (TCL, Philips, Sony, Xiaomi, boxes genéricas)
-- [ ] Tela "Limpar memória": 🟢 recomendados, 🟡 com cuidado, 🔴 intocáveis (bloqueados e explicados),
+- [x] Tela "Limpar memória": 🟢 recomendados, 🟡 com cuidado, 🔴 intocáveis (bloqueados e explicados),
       já desativados (reativar), memória estimada a liberar
-- [ ] Revisão do plano → aplicar → resultado (antes/depois) → "Desfazer tudo"
-- [ ] Tela "Backups": lista os backups da TV e restaura (com plano revisável)
-- [ ] Aviso de "mudança incompleta" com botão de desfazer
-- [ ] Trava da TV real (`allowRealWrites`), liberada só com aprovação do usuário
+- [x] Revisão do plano → aplicar → resultado (antes/depois) → "Desfazer tudo"
+- [x] Tela "Backups": lista os backups da TV e restaura (com plano revisável)
+- [x] Aviso de "mudança incompleta" com botão de desfazer
+- [ ] Liberação na TV real (aguardando aprovação do usuário)
+- [x] Trava da TV real (`allowRealWrites`)
 
 ## Etapas
 1. Tela de limpeza (seleção + estimativa) consumindo `/api/cleanup`.
@@ -31,3 +32,13 @@ real, mostra a prévia do plano.
 - Nas TVs simuladas: limpar, ver a memória subir, desfazer e voltar exatamente ao estado anterior.
 - Falhas simuladas no meio terminam desfeitas automaticamente, com mensagem clara.
 - Na TV real: prévia funciona; "Aplicar" bloqueado com explicação.
+
+## Registro de execução
+- Telas: "Visão geral · Limpar memória · Backups" (seletor horizontal simples), revisão do plano, aplicação,
+  resultado com memória antes/depois, "Desfazer tudo", restaurar backup, aviso de mudança pela metade.
+- Cenários novos na rede simulada: `192.168.0.65` (falha no 2º passo) e `.66` (rede cai durante a limpeza).
+- Bugs encontrados no teste exploratório (todos com teste e2e em `studio/web/e2e/limpeza.spec.ts`):
+  1. Mensagem "desfeito com sucesso" sumia junto com o aviso de pendência.
+  2. Botões secundários ficavam azuis com texto cinza ao passar o mouse.
+  3. "Limpar memória — em breve (fase 3)" continuava aparecendo.
+- Falta: usuário aprovar e testar na TV real.

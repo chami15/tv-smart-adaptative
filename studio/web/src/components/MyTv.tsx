@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react';
 import { ApiError, call } from '../api.ts';
 import { formatMemory, RAM_LABEL, RESOLUTION_LABEL } from '../format.ts';
-import type { DeviceInventory } from '../types.ts';
+import type { DeviceInventory, StudioStatus } from '../types.ts';
+import { Backups } from './Backups.tsx';
+import { Cleanup } from './Cleanup.tsx';
 import { Notice } from './Notice.tsx';
 
 type Filter = 'all' | 'system' | 'user' | 'disabled';
@@ -10,11 +12,16 @@ interface Props {
   serial: string;
   inventory: DeviceInventory;
   dataDir: string;
+  writes: StudioStatus['writes'];
   onRefresh: () => void;
+  onChanged: () => void;
   onDisconnect: () => void;
 }
 
-export function MyTv({ serial, inventory: inv, onRefresh, onDisconnect }: Props) {
+type Tab = 'overview' | 'cleanup' | 'backups';
+
+export function MyTv({ serial, inventory: inv, writes, onRefresh, onChanged, onDisconnect }: Props) {
+  const [tab, setTab] = useState<Tab>('overview');
   const [filter, setFilter] = useState<Filter>('all');
   const [query, setQuery] = useState('');
   const [snap, setSnap] = useState<{ busy: boolean; dir?: string; error?: string }>({ busy: false });
@@ -77,6 +84,27 @@ export function MyTv({ serial, inventory: inv, onRefresh, onDisconnect }: Props)
           <button className="ghost" onClick={onDisconnect}>Desconectar</button>
         </div>
       </section>
+
+      {complete && inv.device.supported && (
+        <nav className="switch" aria-label="Seções da TV">
+          {(
+            [
+              ['overview', 'Visão geral'],
+              ['cleanup', 'Limpar memória'],
+              ['backups', 'Backups'],
+            ] as const
+          ).map(([id, label]) => (
+            <button key={id} className={tab === id ? 'active' : ''} aria-pressed={tab === id} onClick={() => setTab(id)}>
+              {label}
+            </button>
+          ))}
+        </nav>
+      )}
+
+      {tab === 'cleanup' && <Cleanup serial={serial} writes={writes} onChanged={onChanged} />}
+      {tab === 'backups' && <Backups serial={serial} deviceId={inv.deviceId} writes={writes} onChanged={onChanged} />}
+      {tab === 'overview' && (
+      <>
 
       {!complete && (
         <Notice tone="error" title="A leitura da TV veio incompleta">
@@ -206,9 +234,11 @@ export function MyTv({ serial, inventory: inv, onRefresh, onDisconnect }: Props)
           </tbody>
         </table>
         {shown.length === 0 && <p className="muted">Nenhum app encontrado.</p>}
-        <p className="muted small">A classificação 🟢 seguro / 🟡 cuidado / 🔴 intocável chega na Fase 3 (limpeza).</p>
+        <p className="muted small">A classificação 🟢 seguro / 🟡 cuidado / 🔴 intocável está em "Limpar memória".</p>
       </section>
       </div>
+      </>
+      )}
     </div>
   );
 }

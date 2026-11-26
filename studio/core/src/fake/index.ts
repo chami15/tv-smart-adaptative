@@ -38,6 +38,8 @@ export const FAKE_NETWORK: readonly { host: string; device: string; scenario: st
   { host: '192.168.0.62', device: 'tcl-googletv-2gb', scenario: 'TV não responde (tempo esgotado)', behavior: { timeout: true } },
   { host: '192.168.0.63', device: 'tcl-googletv-2gb', scenario: 'Rede cai no meio da leitura', behavior: { auth: 'accept', acceptAfterPolls: 0, dropAfterCommands: 3 } },
   { host: '192.168.0.64', device: 'tcl-googletv-2gb', scenario: 'Respostas corrompidas', behavior: { auth: 'accept', acceptAfterPolls: 0, garbage: true } },
+  { host: '192.168.0.65', device: 'tcl-googletv-2gb', scenario: 'Limpeza falha no 2º passo (desfaz sozinho)', behavior: { auth: 'accept', acceptAfterPolls: 0, failWriteAt: 2 } },
+  { host: '192.168.0.66', device: 'tcl-googletv-2gb', scenario: 'Rede cai durante a limpeza', behavior: { auth: 'accept', acceptAfterPolls: 0, dropAfterWrites: 1, dropOnce: true } },
 ];
 
 export function createFakeNetwork(options?: FakeWorldOptions): FakeTvWorld {
@@ -60,6 +62,8 @@ const FAKE_NAMES: Record<string, string> = {
   '192.168.0.51': 'TV do Quarto',
   '192.168.0.52': 'Mi Box da Cozinha',
   '192.168.0.53': 'Bravia do Escritório',
+  '192.168.0.65': 'TV que falha na limpeza',
+  '192.168.0.66': 'TV com Wi-Fi ruim',
 };
 
 /** Resultado de busca na rede simulada (modo demonstração e testes). */

@@ -19,7 +19,13 @@ Somente leitura:
 - `getprop [chave]`, `pm list packages [-s|-3|-d|-e|-f|-U]`, `pm list features`, `dumpsys meminfo`,
   `cat /proc/meminfo`, `wm size`, `wm density`, `cmd package resolve-activity` (home atual), `get-state`
 - Conexão: `version`, `devices -l`, `connect`, `disconnect`, `pair`
-- Implementado em `studio/core/src/adb/allowlist.ts` (Fase 1: **somente** esta lista de leitura)
+- Implementado em `studio/core/src/adb/allowlist.ts` (somente leitura)
+
+Escrita (desde a Fase 2) — `studio/core/src/adb/write-allowlist.ts`, lista **separada**:
+- `pm disable-user --user 0 <pkg>` e `pm enable <pkg>`; intocáveis do núcleo nunca são desativados
+- Só executável com um `WriteGrant` derivado de um plano validado, que libera exatamente os comandos dele
+- Na **TV real**, executar planos fica bloqueado até liberação explícita do usuário (`TVSA_ALLOW_REAL_WRITES=1`);
+  desfazer mudanças do próprio Studio é sempre permitido
 
 Escrita (sempre com snapshot + dry-run + confirmação):
 - `pm disable-user --user 0 <pkg>` / `pm enable <pkg>` — somente pacotes fora da lista 🔴
@@ -55,7 +61,7 @@ marca: tudo que não está no catálogo é 🟡 e exige confirmação individual
 - Backups e chaves ADB ficam no PC do usuário (`%USERPROFILE%`), fora do repositório.
 - Inventários usados como fixture de teste passam por anonimização (sem número de série, MAC, IP, contas).
 
-## 4. Fluxo obrigatório para qualquer escrita
+## 4. Fluxo obrigatório para qualquer escrita (implementado em `studio/core/src/changes/executor.ts`)
 1. **Snapshot**: salvar no PC (`backups/<data>/`) a lista de pacotes com estado, home atual, versão do
    sistema e o perfil ativo.
 2. **Plano (dry-run)**: gerar a lista exata de comandos e mostrar ao usuário em linguagem simples.

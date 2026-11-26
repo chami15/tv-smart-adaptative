@@ -4,7 +4,7 @@ import { AdbMissing } from './components/AdbMissing.tsx';
 import { ConnectWizard } from './components/ConnectWizard.tsx';
 import { MyTv } from './components/MyTv.tsx';
 import { Notice } from './components/Notice.tsx';
-import type { DeviceInventory, StudioStatus } from './types.ts';
+import type { DeviceInventory, ExecutionResult, PendingChange, StudioStatus } from './types.ts';
 
 type View =
   | { kind: 'connect'; message?: string }
@@ -19,8 +19,30 @@ export function App() {
   const [status, setStatus] = useState<StudioStatus | null>(null);
   const [fatal, setFatal] = useState<string | null>(null);
   const [view, setView] = useState<View>({ kind: 'connect' });
+  const [pending, setPending] = useState<PendingChange[]>([]);
+  const [pendingBusy, setPendingBusy] = useState(false);
+  const [pendingMsg, setPendingMsg] = useState<string | null>(null);
   const viewRef = useRef(view);
   viewRef.current = view;
+
+  const refreshPending = useCallback(async () => {
+    try {
+      setPending(await call<PendingChange[]>('GET', '/api/pending'));
+    } catch {
+      /* status já mostra problemas de conexão */
+    }
+  }, []);
+
+  /** Recarrega a TV sem sair da tela atual (depois de aplicar mudanças). */
+  const reloadQuiet = useCallback(async (serial: string) => {
+    void refreshPending();
+    try {
+      const inventory = await call<DeviceInventory>('POST', '/api/inventory', { serial });
+      setView((v) => (v.kind === 'tv' && v.serial === serial ? { ...v, inventory } : v));
+    } catch {
+      /* a tela de resultado já explica */
+    }
+  }, [refreshPending]);
 
   const refreshStatus = useCallback(async () => {
     try {
@@ -48,6 +70,7 @@ export function App() {
   useEffect(() => {
     if (!token) return;
     void refreshStatus();
+    void refreshPending();
     const id = setInterval(async () => {
       const v = viewRef.current;
       if (v.kind !== 'connect' && v.kind !== 'waiting') return;
@@ -61,7 +84,7 @@ export function App() {
         setView({ kind: 'connect', message: 'A TV não autorizou a conexão a tempo. Conecte de novo e aceite o aviso na tela da TV.' });
     }, 1500);
     return () => clearInterval(id);
-  }, [token, refreshStatus, loadInventory]);
+  }, [token, refreshStatus, refreshPending, loadInventory]);
 
   const onConnected = useCallback(
     async (serial: string) => {
@@ -106,6 +129,32 @@ export function App() {
           <b>Iniciar-Studio</b> de novo para usar a versão nova.
         </Notice>
       )}
+      {pending.length > 0 && (
+        <PendingBanner
+          pending={pending}
+          currentDevice={view.kind === 'tv' ? { serial: view.serial, deviceId: view.inventory.deviceId } : null}
+          busy={pendingBusy}
+          onRollback={async (planId, serial) => {
+            setPendingBusy(true);
+            setPendingMsg(null);
+            try {
+              const r = await call<ExecutionResult>('POST', '/api/pending/rollback', { planId, serial });
+              setPendingMsg(r.status === 'rolled-back' ? 'Pronto: a mudança pela metade foi desfeita.' : r.message);
+              await reloadQuiet(serial);
+            } catch (err) {
+              setPendingMsg(err instanceof ApiError ? err.message : 'Falha ao desfazer.');
+            } finally {
+              setPendingBusy(false);
+            }
+          }}
+        />
+      )}
+      {pendingMsg && (
+        <Notice tone={pending.length ? 'warn' : 'ok'} title={pending.length ? 'Atenção' : 'Tudo certo'}>
+          {pendingMsg}{' '}
+          <button className="link" onClick={() => setPendingMsg(null)}>fechar</button>
+        </Notice>
+      )}
       {status && !status.adb.found && <AdbMissing onRecheck={async () => { await call('POST', '/api/adb/recheck', {}); await refreshStatus(); }} />}
       {status?.adb.found && view.kind === 'connect' && (
         <ConnectWizard status={status} message={view.message} onConnected={onConnected} onOpen={loadInventory} />
@@ -133,11 +182,42 @@ export function App() {
           serial={view.serial}
           inventory={view.inventory}
           dataDir={status?.dataDir ?? ''}
+          writes={status?.writes}
           onRefresh={() => loadInventory(view.serial)}
+          onChanged={() => void reloadQuiet(view.serial)}
           onDisconnect={() => onDisconnect(view.serial)}
         />
       )}
     </Shell>
+  );
+}
+
+function PendingBanner(props: {
+  pending: PendingChange[];
+  currentDevice: { serial: string; deviceId: string } | null;
+  busy: boolean;
+  onRollback: (planId: string, serial: string) => void;
+}) {
+  return (
+    <Notice tone="warn" title="Uma mudança ficou pela metade">
+      {props.pending.map((p) => {
+        const here = props.currentDevice?.deviceId === p.deviceId;
+        return (
+          <div key={p.planId} className="pending-row">
+            <span>
+              <b>{p.title}</b> ({new Date(p.startedAt).toLocaleString('pt-BR')}). {p.message}
+            </span>
+            {here ? (
+              <button disabled={props.busy} onClick={() => props.onRollback(p.planId, props.currentDevice!.serial)}>
+                {props.busy ? 'Desfazendo…' : 'Desfazer agora'}
+              </button>
+            ) : (
+              <span className="muted small">Conecte e abra essa TV para desfazer.</span>
+            )}
+          </div>
+        );
+      })}
+    </Notice>
   );
 }
 
@@ -159,7 +239,8 @@ function Shell({ status, children }: { status?: StudioStatus | null; children: R
       </header>
       <main>{children}</main>
       <footer className="muted small">
-        Somente leitura — nada é alterado na sua TV.{status?.version ? ` · versão ${status.version.running}` : ''}
+        {status?.writes?.allowed ? 'Toda mudança é revisada antes, com backup e desfazer.' : 'Na sua TV real, o Studio ainda só lê e mostra prévias.'}
+        {status?.version ? ` · versão ${status.version.running}` : ''}
       </footer>
     </div>
   );

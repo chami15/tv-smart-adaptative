@@ -17,8 +17,12 @@ const baseDir = defaultDataDir();
 // Liberação de mudanças na TV REAL (decisão do usuário). Simulado: sempre liberado.
 const allowRealWrites = process.env.TVSA_ALLOW_REAL_WRITES === '1';
 
+// Somente para testes automatizados: TVs simuladas tratadas como "TV real" (para testar a trava).
+const fakeAsReal = fake && process.env.TVSA_FAKE_AS_REAL === '1';
+
 const studio = await startStudio({
   port,
+  ...(fakeAsReal ? { simulated: false } : {}),
   allowRealWrites,
   stepDelayMs: fake ? 250 : 400,
   ...(fixedToken ? { token: fixedToken } : {}),

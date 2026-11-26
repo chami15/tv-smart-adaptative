@@ -14,6 +14,7 @@ export interface StudioStatus {
   dataDir: string;
   fakeNetwork?: { host: string; scenario: string }[];
   version?: { running: string; onDisk: string; updateAvailable: boolean };
+  writes?: { allowed: boolean; reason?: string };
 }
 
 export interface CapabilityStatus {
@@ -53,6 +54,8 @@ export interface SnapshotSummary {
   dir: string;
   createdAt: string;
   device: string;
+  deviceId: string;
+  reason: string;
 }
 
 export interface DiscoveredTv {
@@ -68,4 +71,74 @@ export interface DiscoveryResult {
   networks: { interfaceName: string; address: string; prefix24: string }[];
   tvs: DiscoveredTv[];
   durationMs: number;
+}
+
+export type SafetyLevel = 'protected' | 'caution' | 'safe';
+
+export interface CleanupItem {
+  pkg: string;
+  label: string;
+  level: SafetyLevel;
+  description?: string;
+  effect?: string;
+  enabled: boolean;
+  memoryKb: number | null;
+}
+
+export interface PlanAction {
+  kind: 'disable' | 'enable';
+  pkg: string;
+  label: string;
+  level: SafetyLevel;
+  effect?: string;
+  estimatedKb: number | null;
+}
+
+export interface ChangePlan {
+  id: string;
+  kind: 'cleanup' | 'restore' | 'undo';
+  title: string;
+  serial: string;
+  deviceId: string;
+  actions: PlanAction[];
+  hash: string;
+}
+
+export interface Rejection {
+  pkg: string;
+  reason: string;
+}
+
+export interface PlanResponse {
+  plan: ChangePlan | null;
+  rejected: Rejection[];
+  error?: string;
+}
+
+export interface JournalStep {
+  kind: 'disable' | 'enable';
+  pkg: string;
+  label: string;
+  status: string;
+  error?: string;
+}
+
+export interface ExecutionResult {
+  planId: string;
+  status: 'completed' | 'rolled-back' | 'rollback-failed' | 'interrupted' | 'refused';
+  message: string;
+  steps: JournalStep[];
+  snapshotDir?: string;
+  memoryBeforeKb?: number | null;
+  memoryAfterKb?: number | null;
+  problems?: Rejection[];
+}
+
+export interface PendingChange {
+  planId: string;
+  title: string;
+  deviceId: string;
+  status: string;
+  message?: string;
+  startedAt: string;
 }

@@ -20,6 +20,8 @@ export interface FakeBehavior {
   failWriteAt?: number;
   /** Depois de N escritas a TV fica offline (rede caiu / TV desligou no meio). */
   dropAfterWrites?: number;
+  /** A queda de rede acontece uma vez só (ao reconectar, volta a funcionar). */
+  dropOnce?: boolean;
   /** A TV responde "sucesso" mas não muda nada (a conferência tem que pegar). */
   lieOnWrite?: boolean;
   /** Efeito colateral: desativar a chave também desativa o valor (a checagem de saúde tem que pegar). */

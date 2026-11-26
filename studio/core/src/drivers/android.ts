@@ -22,7 +22,7 @@ export function androidCapabilities(detection: Detection): CapabilityStatus[] {
   }
   return [
     ...read,
-    { id: 'disableApps', label: 'Limpar memória (desativar apps)', status: 'planned', phase: 3, detail: 'Desativa apps de forma reversível (pm disable-user).' },
+    { id: 'disableApps', label: 'Limpar memória (desativar apps)', status: 'available', detail: 'Reversível, com plano revisado, backup e desfazer automático.' },
     { id: 'installLauncher', label: 'Instalar a nova tela inicial', status: 'planned', phase: 4, detail: 'Instalada como app comum, sem root.' },
     {
       id: 'takeOverHome', label: 'Assumir o botão Home', status: 'planned', phase: 4,

@@ -38,7 +38,7 @@ describe('inventário adaptativo (qualquer marca)', () => {
 
   it('capacidades: TV suportada tem limpeza/launcher planejados; não suportada não oferece escrita', async () => {
     const tcl = (await inventoryOf('192.168.0.50')).inv;
-    expect(tcl.capabilities.find((c) => c.id === 'disableApps')).toMatchObject({ status: 'planned', phase: 3 });
+    expect(tcl.capabilities.find((c) => c.id === 'disableApps')).toMatchObject({ status: 'available' });
     const fire = (await inventoryOf('192.168.0.55')).inv;
     for (const id of ['disableApps', 'installLauncher', 'takeOverHome', 'pushProfile']) {
       expect(fire.capabilities.find((c) => c.id === id)?.status).toBe('unsupported');

@@ -1,4 +1,4 @@
-# Fase 2 — Núcleo de segurança para escrita 🟨
+# Fase 2 — Núcleo de segurança para escrita ✅
 
 > Aprovada em 26/11/2026 com a opção B: emendar direto na Fase 3 (TV real só após aprovação).
 
@@ -17,18 +17,18 @@ um **plano** revisável, com backup antes, execução passo a passo, conferênci
 4. A qualquer momento: **"Restaurar TV"** a partir de qualquer backup.
 
 ## Entregáveis
-- [ ] Catálogo de segurança por camadas: `shared/catalog/android.json` + `brands/*.json` com 🔴 intocáveis
+- [x] Catálogo de segurança por camadas: `shared/catalog/android.json` + `brands/*.json` com 🔴 intocáveis
       (entradas HDMI/antena, controle, rede, Play Services, SystemUI, Configurações, instalador…)
-- [ ] `core/changes`: modelo de **plano** (ações, descrição, como desfazer) e **validador** que recusa 🔴
-- [ ] Allowlist de **escrita** separada da de leitura: `pm disable-user --user 0 <pkg>` e `pm enable <pkg>`,
+- [x] `core/changes`: modelo de **plano** (ações, descrição, como desfazer) e **validador** que recusa 🔴
+- [x] Allowlist de **escrita** separada da de leitura: `pm disable-user --user 0 <pkg>` e `pm enable <pkg>`,
       utilizável **só** pelo executor de planos aprovados (a camada de leitura continua recusando)
-- [ ] **Diário de execução** gravado no PC a cada passo: se o Studio/PC/TV cair no meio, ao abrir de novo
+- [x] **Diário de execução** gravado no PC a cada passo: se o Studio/PC/TV cair no meio, ao abrir de novo
       aparece "Há uma mudança incompleta — desfazer?"
-- [ ] Executor: backup obrigatório → passo → conferência → próximo; erro → desfaz em ordem inversa
-- [ ] **Checagem de saúde** depois do plano: TV responde, tela inicial resolve, intocáveis seguem ativos
-- [ ] **Restaurar a partir de backup**: calcula a diferença backup × agora e gera um plano (também revisável)
-- [ ] API: `POST /api/plan` (só calcula), `POST /api/plan/execute`, `GET /api/journal`, `POST /api/restore/plan`
-- [ ] `FakeTvWorld` com escrita simulada e falhas injetáveis
+- [x] Executor: backup obrigatório → passo → conferência → próximo; erro → desfaz em ordem inversa
+- [x] **Checagem de saúde** depois do plano: TV responde, tela inicial resolve, intocáveis seguem ativos
+- [x] **Restaurar a partir de backup**: calcula a diferença backup × agora e gera um plano (também revisável)
+- [x] API: `POST /api/plan` (só calcula), `POST /api/plan/execute`, `GET /api/journal`, `POST /api/restore/plan`
+- [x] `FakeTvWorld` com escrita simulada e falhas injetáveis
 
 ## Etapas (1 commit cada)
 1. Catálogo de intocáveis por camadas + resolvedor (android → marca → modelo) + testes.
@@ -65,3 +65,13 @@ um **plano** revisável, com backup antes, execução passo a passo, conferênci
 | Pacote essencial de uma marca não estar no catálogo | Desconhecido = 🟡 (nunca 🟢); checagem de saúde depois; desfazer automático |
 | Queda de energia no meio | Diário no PC + desfazer ao reabrir; ações são reversíveis por natureza |
 | TV reiniciar e "esquecer" algo | `disable-user` persiste após reiniciar; conferência pós-plano |
+
+## Registro de execução
+- Etapas 1–9 implementadas (commits `fase-02 …`).
+- Bugs encontrados pelos testes antes de chegar ao usuário:
+  1. Allowlist de escrita contava errado os argumentos (recusaria escrita válida).
+  2. Pedido conflitante bloqueava um "reativar" válido.
+  3. Todas as TVs simuladas tinham o mesmo serial (escondia a proteção "outra TV").
+  4. Simulador pedia autorização de novo a cada reconexão (TV real não pede).
+  5. **Teste de caos:** efeito colateral (app desativado junto pela TV) não era desfeito → agora é.
+- Teste de caos: 150 cenários no CI; 2000 rodados localmente sem falha.
