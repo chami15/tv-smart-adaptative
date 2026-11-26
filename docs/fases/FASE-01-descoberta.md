@@ -1,4 +1,4 @@
-# Fase 1 — Descoberta adaptativa (somente leitura) 🟨
+# Fase 1 — Descoberta adaptativa (somente leitura) ✅
 
 **Objetivo:** abrir o Studio no navegador (Windows), conectar a **qualquer** Android TV / Google TV pela
 rede, detectar automaticamente o que ela é e o que suporta, e salvar um inventário + snapshot no PC —
@@ -103,4 +103,5 @@ depuração na TV.
   1. Campo de IP aceitava "tv da sala" como nome de host → `studio/web/tests/address.test.ts`.
   2. Backup de leitura corrompida era salvo como válido → `studio/core/tests/regression/bug-20261126-backup-de-inventario-corrompido.test.ts` (+ API + e2e).
   3. Exportador quebrava com backups antigos → `studio/core/tests/regression/bug-20261126-export-backup-antigo.test.ts`.
-- Falta: etapa 11 manual — checklist na TV real do usuário (`docs/GUIA-USO.md`).
+- Etapa 11 manual concluída: o usuário conectou a TV real e o Studio leu corretamente (26/11/2026).
+- CI verde no Windows e no Linux.
