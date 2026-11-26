@@ -10,9 +10,13 @@ const noOpen = args.has('--no-open') || process.env.TVSA_NO_OPEN === '1';
 const portArg = process.argv.find((a) => a.startsWith('--port='));
 const port = portArg ? Number(portArg.split('=')[1]) : 4780;
 
+// TVSA_TOKEN: usado só pelos testes automatizados para saber o token da sessão.
+const fixedToken = process.env.TVSA_TOKEN && /^[A-Za-z0-9_-]{16,}$/.test(process.env.TVSA_TOKEN) ? process.env.TVSA_TOKEN : undefined;
+
 const baseDir = defaultDataDir();
 const studio = await startStudio({
   port,
+  ...(fixedToken ? { token: fixedToken } : {}),
   dataDir: fake ? path.join(baseDir, 'modo-simulado') : baseDir,
   ...(fake
     ? { transport: createFakeNetwork({ latencyMs: 150 }), fakeNetwork: FAKE_NETWORK.map(({ host, scenario }) => ({ host, scenario })) }
