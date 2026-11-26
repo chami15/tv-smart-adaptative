@@ -6,6 +6,8 @@ import {
   type AdbDeviceEntry,
   type AdbTransport,
   AndroidFamilyDriver,
+  discoverTvs,
+  type DiscoveryResult,
   type DeviceInventory,
   listSnapshots,
   locateAdb,
@@ -19,6 +21,8 @@ export interface StudioServiceOptions {
   /** Transporte fixo (modo simulado / testes). Se ausente, procura o adb real. */
   transport?: AdbTransport;
   fakeNetwork?: readonly { host: string; scenario: string }[];
+  /** Busca de TVs na rede; o padrão é a busca real. */
+  discover?: () => Promise<DiscoveryResult>;
 }
 
 export interface StudioStatus {
@@ -122,6 +126,11 @@ export class StudioService {
       const inv = this.lastInventory.get(serial) ?? (await this.inventory(serial));
       return writeSnapshot(inv, this.options.dataDir, { reason: 'manual' });
     });
+  }
+
+  /** Procura TVs na rede local (só leitura; nenhum comando ADB). */
+  discover(): Promise<DiscoveryResult> {
+    return this.once('discover', () => (this.options.discover ? this.options.discover() : discoverTvs()));
   }
 
   snapshots(): Promise<SnapshotSummary[]> {

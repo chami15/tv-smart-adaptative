@@ -1,7 +1,7 @@
 // Inicia o Studio: `npm start` (TV real) ou `npm run dev:fake` (rede simulada).
 import { execFile } from 'node:child_process';
 import path from 'node:path';
-import { createFakeNetwork, defaultDataDir, FAKE_NETWORK } from '@tvsa/core';
+import { createFakeNetwork, defaultDataDir, FAKE_NETWORK, fakeDiscovery } from '@tvsa/core';
 import { startStudio } from './app.ts';
 
 const args = new Set(process.argv.slice(2));
@@ -19,7 +19,11 @@ const studio = await startStudio({
   ...(fixedToken ? { token: fixedToken } : {}),
   dataDir: fake ? path.join(baseDir, 'modo-simulado') : baseDir,
   ...(fake
-    ? { transport: createFakeNetwork({ latencyMs: 150 }), fakeNetwork: FAKE_NETWORK.map(({ host, scenario }) => ({ host, scenario })) }
+    ? {
+        transport: createFakeNetwork({ latencyMs: 150 }),
+        fakeNetwork: FAKE_NETWORK.map(({ host, scenario }) => ({ host, scenario })),
+        discover: async () => (await new Promise((r) => setTimeout(r, 900)), fakeDiscovery()),
+      }
     : {}),
 });
 

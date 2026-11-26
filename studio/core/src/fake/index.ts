@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import type { DiscoveryResult } from '../discovery/discover.ts';
 import { FakeTvWorld, type FakeWorldOptions } from './world.ts';
 import type { FakeDeviceSpec } from './types.ts';
 
@@ -49,3 +50,35 @@ export function createFakeNetwork(options?: FakeWorldOptions): FakeTvWorld {
   return world;
 }
 export * from './export.ts';
+
+/** Nomes amigáveis que as TVs simuladas "anunciam" na rede. */
+const FAKE_NAMES: Record<string, string> = {
+  '192.168.0.50': 'TV da Sala',
+  '192.168.0.51': 'TV do Quarto',
+  '192.168.0.52': 'Mi Box da Cozinha',
+  '192.168.0.53': 'Bravia do Escritório',
+};
+
+/** Resultado de busca na rede simulada (modo demonstração e testes). */
+export function fakeDiscovery(): DiscoveryResult {
+  const devices = loadFakeDevices();
+  const tvs: DiscoveryResult['tvs'] = FAKE_NETWORK.filter((e) => e.device !== 'android-phone').map((e) => {
+    const off = Boolean(e.behavior?.refuseConnection);
+    return {
+      host: e.host,
+      name: FAKE_NAMES[e.host] ?? null,
+      model: devices.get(e.device)?.props['ro.product.model'] ?? null,
+      adbPort: off ? null : 5555,
+      debuggingEnabled: !off,
+      sources: off ? ['cast'] : ['cast', 'port-5555'],
+    };
+  });
+  // uma TV que anuncia o nome, mas está com a depuração desligada
+  tvs.push({ host: '192.168.0.70', name: 'TV da Varanda', model: 'Smart TV', adbPort: null, debuggingEnabled: false, sources: ['cast'] });
+  tvs.sort((a, b) => Number(b.debuggingEnabled) - Number(a.debuggingEnabled) || Number(!!b.name) - Number(!!a.name));
+  return {
+    networks: [{ interfaceName: 'Wi-Fi (simulado)', address: '192.168.0.10', prefix24: '192.168.0', virtual: false }],
+    tvs,
+    durationMs: 900,
+  };
+}

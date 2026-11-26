@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
-import { createFakeNetwork, FAKE_NETWORK } from '@tvsa/core';
+import { createFakeNetwork, FAKE_NETWORK, fakeDiscovery } from '@tvsa/core';
 import { startStudio, type StudioServer } from '../src/app.ts';
 
 export async function startFakeStudio(): Promise<StudioServer & { dataDir: string; webDir: string }> {
@@ -17,6 +17,7 @@ export async function startFakeStudio(): Promise<StudioServer & { dataDir: strin
     webDir,
     transport: createFakeNetwork(),
     fakeNetwork: FAKE_NETWORK.map(({ host, scenario }) => ({ host, scenario })),
+    discover: async () => fakeDiscovery(),
   });
   return Object.assign(studio, { dataDir, webDir });
 }

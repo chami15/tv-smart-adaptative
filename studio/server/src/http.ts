@@ -133,6 +133,8 @@ async function api(req: http.IncomingMessage, res: http.ServerResponse, url: URL
   const body = await readJson(req);
 
   switch (url.pathname) {
+    case '/api/discover':
+      return sendJson(res, 200, await s.discover());
     case '/api/adb/recheck':
       s.setup();
       return sendJson(res, 200, await s.status());
