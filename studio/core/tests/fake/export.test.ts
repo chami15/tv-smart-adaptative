@@ -19,7 +19,7 @@ it('exporta inventário real como aparelho simulado anônimo e ida-e-volta prese
   expect(json).not.toContain('com.globo.globotv'); // app do usuário renomeado
   expect(json).not.toContain('br.com.spotify.tv');
   expect(json).toContain('com.usuario.app1');
-  expect(json).not.toContain('SIMULADO0001');
+  expect(json).not.toContain('SIMULADO-50');
   expect(json).not.toContain('tv-sala-simulada');
 
   const world = new FakeTvWorld().addTv('10.0.0.9', fixture);

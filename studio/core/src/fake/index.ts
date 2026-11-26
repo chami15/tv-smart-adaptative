@@ -45,7 +45,10 @@ export function createFakeNetwork(options?: FakeWorldOptions): FakeTvWorld {
   const world = new FakeTvWorld(options);
   for (const entry of FAKE_NETWORK) {
     const spec = devices.get(entry.device);
-    if (spec) world.addTv(entry.host, structuredClone(spec), entry.behavior);
+    if (!spec) continue;
+    const clone = structuredClone(spec);
+    clone.props['ro.serialno'] = `SIMULADO-${entry.host.split('.').pop()}`; // cada TV da rede tem seu próprio serial
+    world.addTv(entry.host, clone, entry.behavior);
   }
   return world;
 }

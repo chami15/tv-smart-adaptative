@@ -61,3 +61,12 @@ describe('FakeTvWorld', () => {
     expect(await tv.wmSize()).toBe('Physical size: 1920x1080\n');
   });
 });
+
+// Bug encontrado na Fase 2: todas as TVs simuladas tinham o mesmo serial → mesmo deviceId,
+// o que escondia a proteção "não desfazer mudança em outra TV".
+it('cada TV da rede simulada tem identidade própria', async () => {
+  const world = createFakeNetwork();
+  const ids = new Set<string>();
+  for (const host of ['192.168.0.50', '192.168.0.51', '192.168.0.60']) ids.add(world.specOf(host)!.props['ro.serialno']!);
+  expect(ids.size).toBe(3);
+});

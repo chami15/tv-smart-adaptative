@@ -56,7 +56,7 @@ describe('inventário adaptativo (qualquer marca)', () => {
   it('privacidade: serial, hostname e outros dados pessoais nunca entram no inventário', async () => {
     const { inv } = await inventoryOf('192.168.0.50');
     const json = JSON.stringify(inv);
-    expect(json).not.toContain('SIMULADO0001');
+    expect(json).not.toContain('SIMULADO');
     expect(json).not.toContain('tv-sala-simulada');
     expect(json).not.toContain('192.168.0.50');
     expect(inv.deviceId).toMatch(/^[0-9a-f]{12}$/);

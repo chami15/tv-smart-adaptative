@@ -24,6 +24,8 @@ export class FakeTvWorld implements AdbTransport {
   private readonly hosts = new Map<string, FakeDeviceSpec>();
   private readonly sessions = new Map<string, Session>();
   private readonly paired = new Set<string>();
+  /** Escritas aceitas por host (sobrevive a reconexões). */
+  private readonly writes = new Map<string, number>();
   private readonly latencyMs: number;
   private readonly pairingCode: string;
 
@@ -42,6 +44,21 @@ export class FakeTvWorld implements AdbTransport {
   acceptOnTv(serial: string): void {
     const s = this.sessions.get(serial);
     if (s) s.authorized = true;
+  }
+
+  /** Troca o comportamento de uma TV durante o teste (ex.: injetar falha). */
+  setBehavior(host: string, behavior: FakeBehavior): void {
+    const spec = this.hosts.get(host);
+    if (spec) spec.behavior = { ...spec.behavior, ...behavior };
+  }
+
+  /** Estado atual de um app na TV simulada (para os testes conferirem). */
+  packageState(host: string, pkg: string): boolean | undefined {
+    return this.hosts.get(host)?.packages.find((p) => p.name === pkg)?.enabled;
+  }
+
+  specOf(host: string): FakeDeviceSpec | undefined {
+    return this.hosts.get(host);
   }
 
   /** Simula a rede caindo / TV desligando. */
@@ -113,6 +130,38 @@ export class FakeTvWorld implements AdbTransport {
     }
   }
 
+  private handleWrite(serial: string, s: Session, sh: readonly string[]): AdbRunResult {
+    const host = serial.split(':')[0] ?? '';
+    const b = s.spec.behavior ?? {};
+    const pkgName = sh[sh.length - 1] ?? '';
+    const enable = sh[1] === 'enable';
+    const n = (this.writes.get(host) ?? 0) + 1;
+    if (b.dropAfterWrites !== undefined && n > b.dropAfterWrites) {
+      s.offline = true;
+      return { stdout: '', stderr: 'error: device offline\n', exitCode: 1 };
+    }
+    this.writes.set(host, n);
+    const pkg = s.spec.packages.find((p) => p.name === pkgName);
+    if (!pkg) return { stdout: '', stderr: `Error: java.lang.IllegalArgumentException: Unknown package: ${pkgName}\n`, exitCode: 255 };
+    if (b.failWriteAt === n || b.denyWrite?.includes(pkgName)) {
+      return { stdout: `Error: java.lang.SecurityException: Shell cannot change component state for ${pkgName} to ${enable ? 1 : 3}\n`, stderr: '', exitCode: 0 };
+    }
+    if (!b.lieOnWrite) {
+      pkg.enabled = enable;
+      const side = !enable ? b.sideEffectDisable?.[pkgName] : undefined;
+      const sidePkg = side ? s.spec.packages.find((p) => p.name === side) : undefined;
+      if (sidePkg) sidePkg.enabled = false;
+      if (!enable) {
+        const proc = s.spec.processes.find((p) => p.name === pkgName);
+        if (proc) {
+          s.spec.processes = s.spec.processes.filter((p) => p !== proc);
+          s.spec.memory.availableKb += proc.pssKb;
+        }
+      }
+    }
+    return { stdout: `Package ${pkgName} new state: ${enable ? 'enabled' : 'disabled-user'}\n`, stderr: '', exitCode: 0 };
+  }
+
   private tickAuth(s: Session): void {
     if (s.authorized) return;
     const b = s.spec.behavior ?? {};
@@ -142,6 +191,7 @@ export class FakeTvWorld implements AdbTransport {
     }
     const sh = args.slice(1);
     const key = sh.join(' ');
+    if (sh[0] === 'pm' && (sh[1] === 'disable-user' || sh[1] === 'enable')) return this.handleWrite(serial, s, sh);
     let out: string;
     if (sh[0] === 'getprop' && sh.length === 1) out = R.renderGetprop(s.spec);
     else if (sh[0] === 'getprop') out = (s.spec.props[sh[1] ?? ''] ?? '') + '\n';

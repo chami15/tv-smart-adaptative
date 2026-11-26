@@ -16,6 +16,16 @@ export interface FakeBehavior {
   dropAfterCommands?: number;
   /** Respostas truncadas/estranhas. */
   garbage?: boolean;
+  /** A N-ésima escrita (1 = primeira) falha com erro de permissão. */
+  failWriteAt?: number;
+  /** Depois de N escritas a TV fica offline (rede caiu / TV desligou no meio). */
+  dropAfterWrites?: number;
+  /** A TV responde "sucesso" mas não muda nada (a conferência tem que pegar). */
+  lieOnWrite?: boolean;
+  /** Efeito colateral: desativar a chave também desativa o valor (a checagem de saúde tem que pegar). */
+  sideEffectDisable?: Record<string, string>;
+  /** Apps que a TV recusa desativar (proteção do fabricante). */
+  denyWrite?: string[];
 }
 
 export interface FakeDeviceSpec {

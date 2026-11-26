@@ -37,11 +37,11 @@ export function deviceFolder(inv: DeviceInventory): string {
 }
 
 export class SnapshotError extends Error {
-  readonly code: 'INCOMPLETE_INVENTORY';
-  constructor(message: string) {
+  readonly code: 'INCOMPLETE_INVENTORY' | 'INVALID_SNAPSHOT';
+  constructor(message: string, code: SnapshotError['code'] = 'INCOMPLETE_INVENTORY') {
     super(message);
     this.name = 'SnapshotError';
-    this.code = 'INCOMPLETE_INVENTORY';
+    this.code = code;
   }
 }
 
@@ -151,4 +151,14 @@ export async function listSnapshots(dataDir: string): Promise<SnapshotSummary[]>
     }
   }
   return out.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+/** Lê um backup, garantindo que a pasta pedida está dentro de <dataDir>/backups (nada de caminhos arbitrários). */
+export async function loadSnapshot(dir: string, dataDir: string): Promise<SnapshotFile> {
+  const root = path.resolve(dataDir, 'backups');
+  const target = path.resolve(dir);
+  if (!target.startsWith(root + path.sep)) throw new SnapshotError('Backup fora da pasta de backups do Studio.', 'INVALID_SNAPSHOT');
+  const data = JSON.parse(await fs.readFile(path.join(target, 'snapshot.json'), 'utf8')) as SnapshotFile;
+  if (data.kind !== 'tvsa-snapshot') throw new SnapshotError('Arquivo não é um backup do Studio.', 'INVALID_SNAPSHOT');
+  return data;
 }
