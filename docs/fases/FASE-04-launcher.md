@@ -10,14 +10,14 @@ Dividida em duas partes para manter cada entrega pequena e testável:
 **Fora de escopo:** instalar na TV pelo Studio (4b), editor visual (Fase 5).
 
 ### Entregáveis
-- [ ] `shared/profile/profile.schema.json` (v1) + exemplos válidos/inválidos usados **pelos dois lados**
+- [x] `shared/profile/profile.schema.json` (v1) + exemplos válidos/inválidos usados **pelos dois lados**
       (Studio em TypeScript e Launcher em Kotlin) — assim as regras nunca divergem
-- [ ] Studio: validação do perfil e **perfil padrão gerado a partir do inventário** da TV
-- [ ] `launcher/core` (Kotlin puro, testado aqui): leitura/validação do perfil, cadeia de segurança
+- [x] Studio: validação do perfil e **perfil padrão gerado a partir do inventário** da TV
+- [x] `launcher/core` (Kotlin puro, testado aqui): leitura/validação do perfil, cadeia de segurança
       (perfil novo válido → último válido → padrão), layout adaptativo, montagem das fileiras
-- [ ] `launcher/app` (Android, Compose for TV): fileiras de apps com banner/ícone, atalhos de entradas
+- [x] `launcher/app` (Android, Compose for TV): fileiras de apps com banner/ícone, atalhos de entradas
       HDMI/antena, relógio, modo leve, receptor de perfil protegido, sem permissão de internet
-- [ ] CI: testes do core + build do APK (debug) publicado como artefato
+- [x] CI: testes do core + build do APK (debug) publicado como artefato
 
 ### Regras de segurança do Launcher
 - Instalado como app comum; **não** pede internet, não lê dados pessoais.
@@ -41,3 +41,10 @@ Dividida em duas partes para manter cada entrega pequena e testável:
 |---|---|
 | Android SDK indisponível no ambiente de desenvolvimento | Lógica em Kotlin puro testada aqui; APK compilado na CI |
 | Launcher com bug deixar a TV sem tela inicial | Launcher original só é desativado na 4b, com checagem de saúde e volta automática |
+
+## Registro de execução (4a)
+- Perfil v1 com 17 exemplos compartilhados: Studio (Vitest) e Launcher (JUnit) dão o mesmo resultado.
+- `launcher/core`: 34 testes (parser, cadeia de segurança, layout adaptativo, fileiras).
+- `launcher/app`: compilado e verificado pelo lint **na CI** (o ambiente do Claude não tem acesso ao
+  download do Android SDK). APK de teste publicado como artefato da CI.
+- Decisão pendente para a 4b: como assinar o APK de forma estável (atualizações exigem a mesma assinatura).

@@ -116,6 +116,11 @@ Requer Node 22.18+ (TypeScript roda direto, sem build, em core/server).
 | `npm run typecheck` | Checagem de tipos (core, server, web) |
 | `npm run test:all` | Tudo acima |
 | `npm run export:fixture -- "<backup>"` | Vira um backup real em TV simulada anônima |
+| `cd launcher && ./gradlew -p core test` | Testes do núcleo do Launcher (Kotlin puro, só precisa de Java 17+) |
+| `cd launcher && ./gradlew :app:assembleDebug` | APK do Launcher (precisa do Android SDK; no ambiente do Claude roda só na CI) |
+
+Perfil da TV: `shared/profile/` (schema + exemplos). **Os exemplos são testados pelo Studio (TS) e pelo
+Launcher (Kotlin)** — qualquer mudança de regra precisa atualizar os dois lados e os exemplos.
 
 Testes de regressão de bugs: `studio/core/tests/regression/`, `studio/server/tests/regression-*.test.ts`
 e cenários marcados em `studio/web/e2e/`.
