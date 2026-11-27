@@ -45,6 +45,6 @@ Dividida em duas partes para manter cada entrega pequena e testável:
 ## Registro de execução (4a)
 - Perfil v1 com 17 exemplos compartilhados: Studio (Vitest) e Launcher (JUnit) dão o mesmo resultado.
 - `launcher/core`: 34 testes (parser, cadeia de segurança, layout adaptativo, fileiras).
-- `launcher/app`: compilado e verificado pelo lint **na CI** (o ambiente do Claude não tem acesso ao
+- `launcher/app`: ✅ compilado e aprovado no lint **na CI** (2 ajustes de lint no carregamento de ícones) (o ambiente do Claude não tem acesso ao
   download do Android SDK). APK de teste publicado como artefato da CI.
 - Decisão pendente para a 4b: como assinar o APK de forma estável (atualizações exigem a mesma assinatura).

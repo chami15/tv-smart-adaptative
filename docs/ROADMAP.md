@@ -9,7 +9,7 @@ Status: ⬜ não iniciada · 📝 planejada (aguardando aprovação) · 🟨 em 
 | 1.1 | Encontrar TVs na rede + refinamentos | Listar TVs da rede sem precisar olhar o IP na TV; tela usando a largura toda | Só leitura | ✅ |
 | 2 | Núcleo de segurança p/ escrita | Dry-run, plano de mudanças, execução passo a passo, verificação e rollback | Não (simulado) | ✅ |
 | 3 | Limpeza de memória | Catálogo por camadas 🟢🟡🔴, aplicar/desfazer, medir antes/depois | Sim (reversível; TV real só após aprovação) | 🟨 (pronta no simulado; aguardando liberação na TV real) |
-| 4 | Launcher MVP | App de TV leve e adaptativo (resolução/RAM/API) que lê o perfil; assumir o Home | Sim (app comum) | 🟨 (4a: app + perfil) |
+| 4 | Launcher MVP | App de TV leve e adaptativo (resolução/RAM/API) que lê o perfil; assumir o Home | Sim (app comum) | 🟨 (4a ✅ app + perfil; 4b instalação pelo Studio pendente) |
 | 5 | Studio — editor visual | Prévia com arrastar-e-soltar e navegação simulada por controle | Não | ⬜ |
 | 6 | Deploy | Publicar perfil + Launcher em 1 clique, verificação e rollback automático | Sim | ⬜ |
 | 7 | Polimento | Temas, widgets, múltiplos perfis, levar perfil para outra TV | Sim | ⬜ |
