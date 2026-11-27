@@ -6,3 +6,11 @@ dist/
 playwright-report/
 test-results/
 .tvsa-test-home/
+
+# Gradle / Android
+launcher/**/build/
+launcher/**/.gradle/
+launcher/.kotlin/
+launcher/**/.kotlin/
+launcher/local.properties
+*.keystore
