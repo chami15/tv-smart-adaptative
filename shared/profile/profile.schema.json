@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tv-smart-adaptative/profile.schema.json",
+  "title": "Perfil da TV (TV Smart Adaptative)",
+  "description": "Descreve a tela inicial montada no Studio. Lido pelo Studio (TypeScript) e pelo Launcher (Kotlin) com as MESMAS regras; os exemplos em examples/ são testados pelos dois lados.",
+  "type": "object",
+  "required": ["schemaVersion", "name", "rows"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "name": { "type": "string", "minLength": 1, "maxLength": 60 },
+    "theme": {
+      "type": "object",
+      "properties": {
+        "background": { "$ref": "#/$defs/color" },
+        "accent": { "$ref": "#/$defs/color" },
+        "text": { "$ref": "#/$defs/color" }
+      }
+    },
+    "clock": {
+      "type": "object",
+      "properties": { "show": { "type": "boolean" }, "format24h": { "type": "boolean" } }
+    },
+    "iconSize": { "enum": ["auto", "small", "medium", "large"] },
+    "lightMode": { "enum": ["auto", "on", "off"], "description": "Modo leve: sem animações. 'auto' liga em TVs com pouca memória." },
+    "rows": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "type"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]{1,32}$" },
+          "title": { "type": "string", "minLength": 1, "maxLength": 40 },
+          "type": { "enum": ["apps", "inputs", "all-apps"] },
+          "apps": { "type": "array", "maxItems": 40, "items": { "$ref": "#/$defs/package" } }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+    "package": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9_]*(\\.[a-zA-Z][a-zA-Z0-9_]*)+$", "maxLength": 255 }
+  },
+  "x-rules": [
+    "ids das fileiras são únicos",
+    "fileira 'apps' precisa de 'apps' (pode ser vazia); 'inputs' e 'all-apps' não usam 'apps'",
+    "o mesmo app não se repete dentro de uma fileira",
+    "campos desconhecidos são ignorados (compatibilidade futura); schemaVersion maior que 1 é recusado"
+  ]
+}

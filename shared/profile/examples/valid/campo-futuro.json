@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "name": "Com campo novo",
+  "widgetsDoFuturo": { "clima": true },
+  "rows": [{ "id": "a", "title": "Favoritos", "type": "apps", "apps": [], "corDaFileira": "#FFFFFF" }]
+}

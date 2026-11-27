@@ -1,0 +1,19 @@
+{
+  "$comment": "Usado para montar o perfil padrão a partir do inventário da TV. Apps de vídeo comuns, se estiverem instalados, entram nos Favoritos.",
+  "favoriteCandidates": [
+    "com.netflix.ninja",
+    "com.google.android.youtube.tv",
+    "com.amazon.amazonvideo.livingroom",
+    "com.disney.disneyplus",
+    "com.globo.globotv",
+    "com.hbo.hbonow",
+    "com.wbd.stream",
+    "br.com.spotify.tv",
+    "com.spotify.tv.android",
+    "com.google.android.apps.youtube.music",
+    "com.plexapp.android",
+    "org.videolan.vlc",
+    "org.xbmc.kodi"
+  ],
+  "theme": { "background": "#0F1218", "accent": "#5B8CFF", "text": "#E8EBF2" }
+}

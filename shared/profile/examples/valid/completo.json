@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "name": "TV da Sala",
+  "theme": { "background": "#0F1218", "accent": "#5B8CFF", "text": "#E8EBF2" },
+  "clock": { "show": true, "format24h": true },
+  "iconSize": "auto",
+  "lightMode": "auto",
+  "rows": [
+    { "id": "favoritos", "title": "Favoritos", "type": "apps", "apps": ["com.netflix.ninja", "com.google.android.youtube.tv"] },
+    { "id": "entradas", "title": "Entradas", "type": "inputs" },
+    { "id": "todos", "title": "Todos os apps", "type": "all-apps" }
+  ]
+}

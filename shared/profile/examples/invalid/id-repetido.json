@@ -1,0 +1,1 @@
+{ "schemaVersion": 1, "name": "x", "rows": [{ "id": "a", "title": "A", "type": "all-apps" }, { "id": "a", "title": "B", "type": "inputs" }] }
