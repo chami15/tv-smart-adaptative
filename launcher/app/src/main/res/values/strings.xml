@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TV Smart Adaptative</string>
+    <string name="settings">Configurações</string>
+    <string name="cannot_open">Não foi possível abrir</string>
+</resources>

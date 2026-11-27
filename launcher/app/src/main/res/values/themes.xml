@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Launcher" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+    <color name="background">#FF0F1218</color>
+    <color name="accent">#FF5B8CFF</color>
+</resources>
