@@ -154,7 +154,8 @@ private fun rememberArtwork(pkg: String, layout: LayoutSpec, system: TvSystem): 
     val w = with(density) { layout.cardWidthDp.dp.roundToPx() }
     val h = with(density) { layout.cardHeightDp.dp.roundToPx() }
     val bitmap by produceState<Bitmap?>(initialValue = null, pkg, w, h) {
-        value = withContext(Dispatchers.IO) { system.artwork(pkg, w, h) }
+        val loaded = withContext(Dispatchers.IO) { system.artwork(pkg, w, h) }
+        value = loaded
     }
     return bitmap
 }
