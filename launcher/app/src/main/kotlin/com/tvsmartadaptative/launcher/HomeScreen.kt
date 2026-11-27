@@ -21,6 +21,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -153,9 +155,9 @@ private fun rememberArtwork(pkg: String, layout: LayoutSpec, system: TvSystem): 
     val density = LocalDensity.current
     val w = with(density) { layout.cardWidthDp.dp.roundToPx() }
     val h = with(density) { layout.cardHeightDp.dp.roundToPx() }
-    val bitmap by produceState<Bitmap?>(initialValue = null, pkg, w, h) {
-        val loaded = withContext(Dispatchers.IO) { system.artwork(pkg, w, h) }
-        value = loaded
+    var bitmap by remember(pkg, w, h) { mutableStateOf<Bitmap?>(null) }
+    LaunchedEffect(pkg, w, h) {
+        bitmap = withContext(Dispatchers.IO) { system.artwork(pkg, w, h) }
     }
     return bitmap
 }
